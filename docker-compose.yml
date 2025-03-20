@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:14
+    container_name: litera-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: litera
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: litera-backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    container_name: litera-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - /app/node_modules
+    command: npm run start
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
