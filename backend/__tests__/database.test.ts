@@ -7,7 +7,7 @@ describe("📡 PostgreSQL connection", () => {
 
   beforeAll(async () => {
     client = new Client({
-      host: process.env.DB_HOST || "localhost",
+      host: process.env.DB_HOST ?? "database",
       port: parseInt(process.env.DB_PORT || "5432", 10),
       user: process.env.DB_USER || "Zorba",
       password: process.env.DB_PASSWORD || "Poisson11",
