@@ -1,13 +1,25 @@
 version: "3.8"
 services:
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: litera-pgadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@litera.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on:
+      - database
   database:
+    env_file: .env
     image: postgres:14
     container_name: litera-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: litera
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
