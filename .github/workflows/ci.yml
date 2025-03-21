@@ -19,12 +19,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-          - name: 🛠 Générer le fichier .env.ci à partir des secrets GitHub
-          run: |
-            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env.ci
-            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env.ci
-            echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env.ci
-            echo "DB_HOST=database" >> .env.ci
+      - name: 🛠 Générer le fichier .env.ci à partir des secrets GitHub
+        run: |
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env.ci
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env.ci
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env.ci
+          echo "DB_HOST=database" >> .env.ci
 
       - name: 🚀 Lancer les tests avec Docker Compose
         run: |
