@@ -1,7 +1,9 @@
-import { gql } from 'apollo-server-express';
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import { BookResolver } from "./resolvers/BookResolver";
 
-export const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+export const createSchema = () => {
+  return buildSchema({
+    resolvers: [BookResolver],
+  });
+};

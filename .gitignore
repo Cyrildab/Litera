@@ -5,6 +5,7 @@
 # Environnements
 *.env
 .env
+.env.docker
 
 # Logs
 *.log

@@ -1,23 +1,17 @@
 #!/bin/bash
 
-echo "🚀 Démarrage du projet LitEra..."
+echo "🚀 Lancement de LitEra..."
 
-# Lancer Docker Compose en mode détaché
-echo "🔄 Lancement des services Docker..."
-docker-compose up -d
+docker-compose up -d 
 
-# Attendre quelques secondes pour que tout démarre
-sleep 5
+echo "⏳ Attente du backend (10 secondes)..."
+sleep 10
 
-# Vérifier si les conteneurs sont bien lancés
-echo "📡 Vérification des services en cours..."
-docker ps
+echo "📥 Insertion des livres dans la base de données..."
+docker-compose exec backend npm run seed
 
+echo "✅ Projet démarré avec succès !"
 echo ""
-echo "✅ Projet LitEra lancé avec succès !"
-echo "➡️  Frontend : http://localhost:3000"
-echo "➡️  Backend GraphQL : http://localhost:4000/graphql"
-echo "➡️  PostgreSQL tourne sur le port 5432"
-echo ""
-echo "📌 Utilise 'docker-compose down' pour arrêter les services."
-
+echo "📚 GraphQL ➜ http://localhost:4000/graphql"
+echo "💻 Frontend ➜ http://localhost:3000"
+echo "🛢️ pgAdmin ➜ http://localhost:8081 (admin@litera.com / admin123)"

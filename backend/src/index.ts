@@ -1,27 +1,27 @@
+// src/index.ts
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { typeDefs } from "./schema";
-import { resolvers } from "./resolvers";
+import { createSchema } from "./schema";
 import AppDataSource from "./data-source";
 
 async function startServer() {
   try {
     await AppDataSource.initialize();
-    console.log("✅ Connected to the database");
+    console.log("✅ DB Connected");
 
-    const app = express();
-    const server = new ApolloServer({
-      typeDefs,
-      resolvers,
-    });
+    const schema = await createSchema();
+    const server = new ApolloServer({ schema });
 
     await server.start();
+
+    const app = express();
     server.applyMiddleware({ app });
 
-    const PORT = 4000;
-    app.listen(PORT, () => console.log(`🚀 Backend running at http://localhost:${PORT}/graphql`));
-  } catch (error) {
-    console.error("❌ Error during Data Source initialization", error);
+    app.listen(4000, () => {
+      console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+    });
+  } catch (err) {
+    console.error("❌ Error starting server", err);
   }
 }
 

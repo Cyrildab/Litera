@@ -1,7 +1,16 @@
-import React from "react";
+import { Routes, Route } from "react-router-dom";
+import BookList from "./components/BookList";
+import BookDetail from "./components/BookDetail";
 
-const App: React.FC = () => {
-  return <h1>Hello World</h1>;
-};
+function App() {
+  return (
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<BookList />} />
+        <Route path="/book/:id" element={<BookDetail />} />
+      </Routes>
+    </div>
+  );
+}
 
 export default App;
