@@ -29,14 +29,14 @@ async function seed() {
       "Antoine de Saint-Exupéry",
       "Conte",
       "https://m.media-amazon.com/images/I/710wth0vXZL.jpg",
-      "Un conte poétique et philosophique."
+      "Le Petit Prince vient d’une planète à peine plus grande que lui sur laquelle il y a des baobabs et une fleur très précieuse, qui fait sa coquette et dont il se sent responsable. Le Petit Prince aime le coucher de soleil. Un jour, il l'a vu quarante-quatre fois ! Il a aussi visité d'autres planètes et rencontré des gens très importants qui ne savaient pas répondre à ses questions. Sur la Terre, il a apprivoisé le renard, qui est devenu son ami. Et il a rencontré l’aviateur échoué en plein désert du Sahara. Alors, il lui a demandé : « S’il vous plaît… dessine-moi un mouton ! »"
     ),
     new Book(
       "Les Misérables",
       "Victor Hugo",
       "Roman",
       "https://www.gallimard.fr/system/files/styles/medium/private/migrations/ouvrages/couvertures/G09587.jpg.webp?itok=v2Vir-f0",
-      "Une fresque sociale et historique de la France."
+      "Paris et ses prisons, ses égouts. Paris insurgé : le Paris des révolutions, des barricades sur lesquelles fraternisent les hommes du peuple. Paris incarné à travers la figure de Gavroche, enfant des rues effronté et malicieux. Hugo retrace ici avec force les misères et les heures glorieuses des masses vivantes qui se retrouvent. Les événements se précipitent, les personnages se rencontrent, se heurtent, s'unissent parfois, à l'image de Cosette et de Marius. L'histoire du forçat évadé et de la petite miséreuse symbolise quelque chose de plus grand : avec Les Misérables, Hugo réalise enfin l'esprit du peuple."
     ),
     new Book("L'Étranger", "Albert Camus", "Philosophie", "https://m.media-amazon.com/images/I/8130inT26AL.jpg", "Un roman emblématique de l'absurde."),
     new Book(

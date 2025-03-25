@@ -1,0 +1,103 @@
+@import "../../assets/variables";
+
+.bookdetail {
+  display: flex;
+  gap: 5rem;
+
+  &__cover {
+    width: 35rem;
+    height: 50rem;
+    margin-top: 6rem;
+    margin-left: 6rem;
+    box-shadow: 3px 3px 3px gray;
+    border: 1px solid black;
+  }
+
+  &__container {
+    margin-top: 6rem;
+  }
+
+  &__title {
+    font-size: 4rem;
+    font-family: $font-primary;
+    font-weight: bold;
+  }
+
+  &__author {
+    font-size: 3rem;
+    font-weight: 400;
+    font-family: $font-primary;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  &__gender {
+    font-size: 2rem;
+    font-weight: lighter;
+    font-family: $font-primary;
+    margin-bottom: 3rem;
+  }
+
+  &__description {
+    font-family: $font-primary;
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    width: 60rem;
+  }
+
+  &__containertitleranking {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+
+  &__rating {
+    margin: 1rem 0;
+    font-size: 2.5rem;
+
+    .star {
+      color: transparent;
+      -webkit-text-stroke: 1px black;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &.filled {
+        color: gold;
+        -webkit-text-stroke: 0;
+      }
+    }
+  }
+
+  &__btnenum {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 5rem;
+
+    button {
+      background-color: $secondary;
+      border-style: none;
+      width: 10rem;
+      height: 3.5rem;
+      border-radius: 20rem;
+      font-family: $font-primary;
+      font-size: 1.5rem;
+
+      &:hover {
+        background-color: $tertiary;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__criticalbtn {
+    border-style: none;
+    background-color: white;
+    font-family: $font-primary;
+    font-size: 1.5rem;
+    text-decoration: underline;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

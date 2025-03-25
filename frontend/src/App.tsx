@@ -1,15 +1,13 @@
-import { Routes, Route } from "react-router-dom";
-import BookList from "./components/BookList";
-import BookDetail from "./components/BookDetail";
+// src/App.tsx
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/NavBar/NavBar";
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<BookList />} />
-        <Route path="/book/:id" element={<BookDetail />} />
-      </Routes>
-    </div>
+    <>
+      <Navbar />
+      <Outlet />
+    </>
   );
 }
 

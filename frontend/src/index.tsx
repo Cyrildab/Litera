@@ -1,8 +1,8 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
+import "./index.scss";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -12,8 +12,6 @@ const client = new ApolloClient({
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <ApolloProvider client={client}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </ApolloProvider>
 );

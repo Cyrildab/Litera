@@ -1,0 +1,25 @@
+@import "../../assets/variables";
+
+.input__login-page {
+  background-color: white;
+  border-style: none;
+  border-radius: 20rem;
+  padding: 10px 15px;
+  width: 230px;
+  font-size: 16px;
+  z-index: 1;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    border-color: $primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px $secondary;
+  }
+
+  &::placeholder {
+    color: grey;
+  }
+}
