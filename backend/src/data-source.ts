@@ -3,13 +3,6 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log("📦 DB Config:", {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -21,14 +14,6 @@ const AppDataSource = new DataSource({
   entities: ["src/entities/*.ts"],
   synchronize: true,
   logging: true,
-});
-
-console.log("📦 DB Config:", {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
 });
 
 export default AppDataSource;

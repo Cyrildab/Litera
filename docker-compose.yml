@@ -8,8 +8,11 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@litera.com
       PGADMIN_DEFAULT_PASSWORD: admin123
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - database
+
   database:
     env_file: .env
     image: postgres:14
@@ -51,3 +54,4 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:
