@@ -45,7 +45,7 @@ const Navbar = () => {
       setSelectedIndex((prev) => Math.max(prev - 1, 0));
     } else if (e.key === "Enter" && selectedIndex >= 0) {
       const selectedBook = results[selectedIndex];
-      navigate(`/book/${selectedBook.id}`);
+      navigate(`/books/${selectedBook.id}`);
       setSearch("");
       setSelectedIndex(-1);
       setResults([]);
@@ -92,7 +92,7 @@ const Navbar = () => {
               {results.map((book: any, index: number) => (
                 <Link
                   key={book.id}
-                  to={`/book/${book.id}`}
+                  to={`/books/${book.id}`}
                   onClick={() => {
                     setSearch("");
                     setSelectedIndex(-1);
