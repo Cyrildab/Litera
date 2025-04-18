@@ -1,5 +1,5 @@
-// src/index.ts
 import express from "express";
+import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
 import { createSchema } from "./schema";
 import AppDataSource from "./data-source";
@@ -15,6 +15,14 @@ async function startServer() {
     await server.start();
 
     const app = express();
+
+    app.use(
+      cors({
+        origin: ["https://litera-app.com"],
+        credentials: true,
+      })
+    );
+
     server.applyMiddleware({ app });
 
     app.listen(4000, () => {
@@ -24,5 +32,3 @@ async function startServer() {
     console.error("❌ Error starting server", err);
   }
 }
-
-startServer();
