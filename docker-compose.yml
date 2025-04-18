@@ -43,7 +43,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_GRAPHQL_API_URL: https://api.litera-app.com/graphql
+        REACT_APP_GRAPHQL_API_URL: http://localhost:4000/graphql
     container_name: litera-frontend
     ports:
       - "3000:3000"

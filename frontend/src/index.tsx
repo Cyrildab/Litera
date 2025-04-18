@@ -5,7 +5,7 @@ import { router } from "./router";
 import "./index.scss";
 
 const client = new ApolloClient({
-  uri: import.meta.env.VITE_GRAPHQL_API_URL,
+  uri: process.env.REACT_APP_GRAPHQL_API_URL,
   cache: new InMemoryCache(),
 });
 
