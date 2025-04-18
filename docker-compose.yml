@@ -47,6 +47,10 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+    # 🚫 Supprime les volumes, sinon ça écrase ce qui a été construit dans l'image
+    # volumes:
+    #   - ./frontend/src:/app/src
+    #   - ./frontend/public:/app/public
 
 volumes:
   postgres_data:
