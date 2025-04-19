@@ -14,7 +14,7 @@ const BookList = () => {
       {data.books.map((book: any) => (
         <div key={book.id}>
           <h3>
-            <Link to={`/book/${book.id}`}>{book.title}</Link>
+            <Link to={`/books/${book.id}`}>{book.title}</Link>
           </h3>
           <p>Auteur : {book.author}</p>
           <img src={book.cover} alt={book.title} width={150} />

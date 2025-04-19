@@ -7,8 +7,6 @@ interface LoginFormValues {
   password: string;
 }
 
-//deploy
-
 const LoginPage = () => {
   const { register, handleSubmit } = useForm<LoginFormValues>();
 
