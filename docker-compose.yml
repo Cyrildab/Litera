@@ -50,8 +50,6 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-    env_file:
-      - ./frontend/.env
 
 volumes:
   postgres_data:
