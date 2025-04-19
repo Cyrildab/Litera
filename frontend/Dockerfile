@@ -2,7 +2,6 @@
 FROM node:18 AS build
 WORKDIR /app
 
-# Injecte la variable au moment du build
 ARG REACT_APP_GRAPHQL_API_URL
 ENV REACT_APP_GRAPHQL_API_URL=$REACT_APP_GRAPHQL_API_URL
 
@@ -12,7 +11,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Étape de production
+# Étape de prod
 FROM node:18-slim
 WORKDIR /app
 
