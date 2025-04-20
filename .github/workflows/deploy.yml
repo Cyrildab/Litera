@@ -13,7 +13,7 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup SSH
+      - name: 🔐 Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -21,10 +21,10 @@ jobs:
       - name: 🚀 Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@51.178.137.12 << 'EOF'
-          cd ~/litera
-          git pull origin main
-          docker compose down
-          docker rmi litera-frontend || true
-          docker compose build --build-arg REACT_APP_GRAPHQL_API_URL=https://api.litera-app.com/graphql
-          docker compose up -d
+            cd ~/litera
+            git pull origin main
+            docker compose down
+            docker rmi litera-frontend || true
+            docker compose build --build-arg REACT_APP_GRAPHQL_API_URL=https://api.litera-app.com/graphql
+            docker compose up -d
           EOF
