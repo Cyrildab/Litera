@@ -18,15 +18,22 @@ async function startServer() {
 
     app.use(
       cors({
-        origin: ["https://litera-app.com", "https://api.litera-app.com", "http://localhost:3000"],
+        origin: (origin, callback) => {
+          const allowedOrigins = ["http://localhost:3000", "https://litera-app.com", "https://api.litera-app.com"];
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
         credentials: true,
       })
     );
 
     server.applyMiddleware({ app });
 
-    app.listen(4000, () => {
-      console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+    app.listen(4000, "0.0.0.0", () => {
+      console.log(`🚀 Server ready at http://0.0.0.0:4000/graphql`);
     });
   } catch (err) {
     console.error("❌ Error starting server", err);
