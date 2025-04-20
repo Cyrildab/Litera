@@ -17,7 +17,6 @@ RUN echo "🛠️ Build avec URL: $REACT_APP_GRAPHQL_API_URL" && \
 # Étape de prod
 FROM node:18-slim
 WORKDIR /app
-
 RUN npm install -g serve
 COPY --from=build /app/build ./build
 
