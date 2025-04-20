@@ -18,7 +18,7 @@ async function startServer() {
 
     app.use(
       cors({
-        origin: ["https://litera-app.com", "http://localhost:3000"],
+        origin: ["https://litera-app.com", "https://api.litera-app.com", "http://localhost:3000"],
         credentials: true,
       })
     );
