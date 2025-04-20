@@ -1,3 +1,4 @@
+# Étape de build
 FROM node:18 AS build
 WORKDIR /app
 
@@ -13,6 +14,7 @@ RUN echo "🛠️ Build avec URL: $REACT_APP_GRAPHQL_API_URL" && \
     if [ -z "$REACT_APP_GRAPHQL_API_URL" ]; then echo "❌ Variable REACT_APP_GRAPHQL_API_URL non définie" && exit 1; fi && \
     npm run build
 
+# Étape de prod
 FROM node:18-slim
 WORKDIR /app
 

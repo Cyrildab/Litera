@@ -41,9 +41,9 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      args:
-        REACT_APP_GRAPHQL_API_URL: ${REACT_APP_GRAPHQL_API_URL}
+    context: ./frontend
+    args:
+      REACT_APP_GRAPHQL_API_URL: https://api.litera-app.com/graphql
     container_name: litera-frontend
     ports:
       - "3000:3000"
