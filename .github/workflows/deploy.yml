@@ -21,10 +21,9 @@ jobs:
       - name: 🚀 Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@51.178.137.12 << 'EOF'
-            export REACT_APP_GRAPHQL_API_URL=https://api.litera-app.com/graphql
             cd ~/litera
             git pull origin main
             docker compose down
-            docker compose build
+            docker compose build --build-arg REACT_APP_GRAPHQL_API_URL=https://api.litera-app.com/graphql
             docker compose up -d
           EOF
