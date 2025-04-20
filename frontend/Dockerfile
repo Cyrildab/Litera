@@ -9,7 +9,9 @@ RUN npm install
 
 COPY . .
 
-RUN echo "🛠️ Build avec URL: $REACT_APP_GRAPHQL_API_URL" && npm run build
+RUN echo "🛠️ Build avec URL: $REACT_APP_GRAPHQL_API_URL" && \
+    if [ -z "$REACT_APP_GRAPHQL_API_URL" ]; then echo "❌ Variable REACT_APP_GRAPHQL_API_URL non définie" && exit 1; fi && \
+    npm run build
 
 FROM node:18-slim
 WORKDIR /app
