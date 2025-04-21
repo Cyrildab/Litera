@@ -9,8 +9,8 @@
 
   &__container {
     background-color: $quaternary;
-    width: 30rem;
-    height: 30rem;
+    width: 35rem;
+    height: 35rem;
     padding: 3rem 4rem;
     border-radius: 1rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -40,9 +40,44 @@
     border-radius: 20rem;
     cursor: pointer;
     transition: background 0.2s ease;
+    margin-top: 4rem;
 
     &:hover {
       background-color: darken($tertiary, 10%);
+    }
+  }
+
+  &__error {
+    color: red;
+    max-height: 0.001rem;
+  }
+}
+
+.input-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input__login-page {
+    width: 100%;
+    padding-right: 3rem;
+  }
+
+  &__toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 }

@@ -101,3 +101,57 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .bookdetail {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+
+    &__cover {
+      width: 90%;
+      height: auto;
+      margin: 0;
+    }
+
+    &__container {
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    &__description {
+      width: 100%;
+      font-size: 1.4rem;
+    }
+
+    &__title {
+      font-size: 2.5rem;
+    }
+
+    &__author,
+    &__gender {
+      font-size: 1.6rem;
+    }
+
+    &__rating {
+      font-size: 2rem;
+    }
+
+    &__btnenum {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+
+      button {
+        width: 8rem;
+        height: 3rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    &__criticalbtn {
+      font-size: 1.3rem;
+    }
+  }
+}
