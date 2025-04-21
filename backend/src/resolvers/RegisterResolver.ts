@@ -7,7 +7,7 @@ import AppDataSource from "../data-source";
 const userRepo = AppDataSource.getRepository(User);
 
 @Resolver()
-export class AuthResolver {
+export class RegisterResolver {
   @Mutation(() => Boolean)
   async register(@Arg("username") username: string, @Arg("email") email: string, @Arg("password") password: string): Promise<boolean> {
     const existingUser = await userRepo.findOne({ where: { email } });
