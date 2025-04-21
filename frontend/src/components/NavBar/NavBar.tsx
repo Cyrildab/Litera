@@ -3,6 +3,8 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { SEARCH_BOOKS } from "../../graphql/queries/searchBooks";
 import { GET_SUGGESTIONS } from "../../graphql/queries/getSuggestions";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../../context/userContext";
+import { toast } from "react-toastify";
 import "./NavBar.scss";
 
 const Navbar = () => {
@@ -11,6 +13,7 @@ const Navbar = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [searchBooks] = useLazyQuery(SEARCH_BOOKS);
   const { data: suggestionsData } = useQuery(GET_SUGGESTIONS);
+  const { user, loading } = useUser();
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -66,6 +69,10 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleProfileClick = () => {
+    toast.info("Profil disponible plus tard !");
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar__left">
@@ -112,7 +119,17 @@ const Navbar = () => {
         <Link to="/books" className="navbar__button">
           Mes livres
         </Link>
-        <button onClick={() => alert("Bientôt disponible")}>Mon profil</button>
+
+        {loading ? (
+          <span>Chargement...</span>
+        ) : user ? (
+          <div className="navbar__profile" onClick={handleProfileClick} title="Accéder au profil">
+            <div className="navbar__avatar">{user.username.charAt(0).toUpperCase()}</div>
+            <span className="navbar__username">{user.username}</span>
+          </div>
+        ) : (
+          <button onClick={() => navigate("/register")}>Créer un compte</button>
+        )}
       </div>
     </nav>
   );

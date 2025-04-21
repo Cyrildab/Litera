@@ -4,8 +4,9 @@ import { BookResolver } from "./resolvers/BookResolver";
 import { BookSearchResolver } from "./resolvers/SearchBooks";
 import { RegisterResolver } from "./resolvers/RegisterResolver";
 import { LoginResolver } from "./resolvers/LoginResolver";
+import { MeResolver } from "./resolvers/MeResolver";
 
 export const createSchema = () =>
   buildSchema({
-    resolvers: [BookResolver, BookSearchResolver, RegisterResolver, LoginResolver],
+    resolvers: [BookResolver, BookSearchResolver, RegisterResolver, LoginResolver, MeResolver],
   });

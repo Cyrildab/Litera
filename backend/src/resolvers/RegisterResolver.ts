@@ -1,6 +1,5 @@
 import { Arg, Mutation, Resolver } from "type-graphql";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 import AppDataSource from "../data-source";
 

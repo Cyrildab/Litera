@@ -16,6 +16,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/graphql": "^14.2.3",
     "@types/jest": "^29.5.14",
@@ -32,6 +33,7 @@
     "apollo-server-express": "^3.13.0",
     "bcryptjs": "^3.0.2",
     "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { REGISTER_MUTATION } from "../../graphql/mutations/register";
+import { LOGIN_MUTATION } from "../../graphql/mutations/login";
 import InputField from "../../components/ImputField/ImputField";
 import { isStrongPassword } from "../../utils/validators";
 import { EyeOnIcon, EyeOffIcon } from "../../utils/iconList";
+import "react-toastify/dist/ReactToastify.css";
 import "./RegisterPage.scss";
 
 interface RegisterFormValues {
@@ -21,9 +25,13 @@ const RegisterPage = () => {
     setError,
     formState: { errors },
   } = useForm<RegisterFormValues>({ mode: "onTouched" });
+
   const [registerUser] = useMutation(REGISTER_MUTATION);
+  const [loginUser] = useMutation(LOGIN_MUTATION);
+  const apolloClient = useApolloClient();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (formData: RegisterFormValues) => {
     if (!isStrongPassword(formData.password)) {
@@ -50,7 +58,20 @@ const RegisterPage = () => {
           password: formData.password,
         },
       });
-      alert("Inscription réussie !");
+
+      await loginUser({
+        variables: {
+          email: formData.email,
+          password: formData.password,
+        },
+      });
+
+      await apolloClient.refetchQueries({
+        include: ["Me"],
+      });
+
+      toast.success("Inscription réussie !");
+      setTimeout(() => navigate("/"), 2000);
     } catch (error: any) {
       setError("email", {
         type: "manual",
@@ -86,6 +107,7 @@ const RegisterPage = () => {
               {showPassword ? <EyeOffIcon /> : <EyeOnIcon />}
             </button>
           </div>
+
           <div className="input-field-wrapper">
             <input
               className="input__login-page"
@@ -104,8 +126,10 @@ const RegisterPage = () => {
               {showConfirmPassword ? <EyeOffIcon /> : <EyeOnIcon />}
             </button>
           </div>
+
           {errors.confirmPassword && <p className="register-page__error">{errors.confirmPassword.message}</p>}
           {errors.password && <p className="register-page__error">{errors.password.message}</p>}
+
           <button type="submit" className="register-page__button">
             S'inscrire
           </button>

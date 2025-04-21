@@ -1,43 +1,38 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { createSchema } from "./schema";
 import AppDataSource from "./data-source";
 
 async function startServer() {
-  try {
-    await AppDataSource.initialize();
-    console.log("✅ DB Connected");
+  await AppDataSource.initialize();
+  console.log("✅ DB Connected");
 
-    const schema = await createSchema();
-    const server = new ApolloServer({ schema });
+  const schema = await createSchema();
 
-    await server.start();
+  const app = express();
 
-    const app = express();
+  app.use(cookieParser());
 
-    app.use(
-      cors({
-        origin: (origin, callback) => {
-          const allowedOrigins = ["http://localhost:3000", "https://litera-app.com", "https://api.litera-app.com"];
-          if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-          } else {
-            callback(new Error("Not allowed by CORS"));
-          }
-        },
-        credentials: true,
-      })
-    );
+  app.use(
+    cors({
+      origin: ["http://localhost:3000", "https://litera-app.com"],
+      credentials: true,
+    })
+  );
 
-    server.applyMiddleware({ app });
+  const server = new ApolloServer({
+    schema,
+    context: ({ req, res }) => ({ req, res }),
+  });
 
-    app.listen(4000, "0.0.0.0", () => {
-      console.log(`🚀 Server ready at http://0.0.0.0:4000/graphql`);
-    });
-  } catch (err) {
-    console.error("❌ Error starting server", err);
-  }
+  await server.start();
+  server.applyMiddleware({ app, cors: false });
+
+  app.listen(4000, "0.0.0.0", () => {
+    console.log(`🚀 Server ready at http://0.0.0.0:4000/graphql`);
+  });
 }
 
 startServer();

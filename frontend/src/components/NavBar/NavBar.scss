@@ -12,7 +12,7 @@
   position: relative;
   z-index: 10;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow: visible;
 
   &__left {
     display: flex;
@@ -32,7 +32,7 @@
       border-radius: 20rem;
       padding: 0.5rem 1rem;
       font-size: 1.5rem;
-      width: 10rem;
+      width: 14rem;
       height: 4rem;
       cursor: pointer;
 
@@ -106,7 +106,7 @@
     background: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 0.5rem;
-    z-index: 99;
+    z-index: 999;
     display: flex;
     flex-direction: column;
     max-height: 15rem;
@@ -143,6 +143,40 @@
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 999px;
+    padding: 0.3rem 1rem;
+    gap: 0.7rem;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px $secondary;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $tertiary;
+    }
+  }
+
+  &__avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: $secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  &__username {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: black;
   }
 }
 
