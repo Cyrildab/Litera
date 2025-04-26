@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { createSchema } from "./schema";
 import AppDataSource from "./data-source";
+import jwt from "jsonwebtoken";
 
 async function startServer() {
   await AppDataSource.initialize();
@@ -24,7 +25,21 @@ async function startServer() {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req, res }) => ({ req, res }),
+    context: async ({ req, res }) => {
+      const token = req.cookies["token"];
+      let user = null;
+
+      if (token) {
+        try {
+          const payload = jwt.verify(token, process.env.JWT_SECRET!) as any;
+          user = { id: payload.userId };
+        } catch (err) {
+          console.warn("❌ JWT invalide", err);
+        }
+      }
+
+      return { req: { ...req, user }, res };
+    },
   });
 
   await server.start();

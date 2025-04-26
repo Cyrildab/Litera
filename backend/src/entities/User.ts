@@ -1,5 +1,6 @@
 import { Field, ObjectType, ID } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserBook } from "./UserBook";
 
 @ObjectType()
 @Entity()
@@ -34,4 +35,7 @@ export class User {
   @Field({ nullable: true })
   @Column({ type: "boolean", nullable: true })
   gender?: boolean;
+
+  @OneToMany(() => UserBook, (userBook) => userBook.user)
+  userBooks?: UserBook[];
 }

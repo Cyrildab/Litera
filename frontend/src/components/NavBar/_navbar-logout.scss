@@ -1,0 +1,34 @@
+.navbar__logout-icon {
+  width: 3.8rem;
+  height: 3.8rem;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px $secondary;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    stroke: black;
+  }
+
+  &:hover {
+    background-color: $tertiary;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar__logout-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
+}

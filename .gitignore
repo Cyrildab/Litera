@@ -13,3 +13,5 @@
 # Build output
 /backend/dist
 /frontend/build
+
+/src/graphql/generated/

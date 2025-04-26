@@ -1,0 +1,68 @@
+.navbar {
+  &__right {
+    display: flex;
+    gap: 2rem;
+    margin-right: 3rem;
+
+    button,
+    .navbar__button {
+      background-color: $secondary;
+      border: none;
+      border-radius: 20rem;
+      padding: 0.5rem 1rem;
+      font-size: 1.5rem;
+      width: 14rem;
+      height: 4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      text-decoration: none;
+      color: black;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background-color: $tertiary;
+      }
+
+      &:active,
+      &:focus,
+      &:visited {
+        color: black;
+        outline: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    &__bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: $primary;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 99;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    &__right {
+      flex-direction: row;
+      gap: 1rem;
+      margin: 0;
+
+      button,
+      .navbar__button {
+        font-size: 1.2rem;
+        height: 3.5rem;
+        width: auto;
+        padding: 0 1.2rem;
+      }
+    }
+  }
+}

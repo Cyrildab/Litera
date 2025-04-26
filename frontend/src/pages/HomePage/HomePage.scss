@@ -1,0 +1,125 @@
+@import "../../assets/variables";
+
+.homepage {
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f9f9fc 0%, #eef2f7 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  &__content {
+    max-width: 600px;
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 5rem;
+    }
+  }
+
+  &__title {
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    @media (max-width: 600px) {
+      font-size: 2rem;
+    }
+  }
+
+  &__description {
+    font-size: 1.4rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+  }
+
+  &__stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+
+    @media (max-width: 600px) {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+      margin: 0;
+    }
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: $primary;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 120px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+    @media (max-width: 600px) {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+      margin: 0;
+    }
+  }
+
+  &__number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: $tertiary;
+    margin-bottom: 0.5rem;
+    @media (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__label {
+    font-size: 1.2rem;
+    color: #333;
+    @media (max-width: 600px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__button {
+    margin-top: 2rem;
+    padding: 1rem 2.5rem;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 2rem;
+    background-color: $secondary;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $tertiary;
+    }
+
+    &--secondary {
+      background-color: #43a047;
+      margin-left: 1rem;
+
+      &:hover {
+        background-color: #2e7d32;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+}

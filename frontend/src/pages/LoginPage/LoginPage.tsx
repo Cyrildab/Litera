@@ -1,7 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../graphql/mutations/login";
 import InputField from "../../components/ImputField/ImputField";
+import { useUser } from "../../context/userContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./LoginPage.scss";
 
 interface LoginFormValues {
@@ -12,6 +17,15 @@ interface LoginFormValues {
 const LoginPage = () => {
   const { register, handleSubmit } = useForm<LoginFormValues>();
   const [login, { loading }] = useMutation(LOGIN_MUTATION);
+  const { user } = useUser();
+  const navigate = useNavigate();
+  const apolloClient = useApolloClient();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const onSubmit = async (formData: LoginFormValues) => {
     try {
@@ -22,9 +36,14 @@ const LoginPage = () => {
         },
       });
 
-      alert(`Welcome ${data.login.user.username} !`);
+      await apolloClient.refetchQueries({
+        include: ["Me"],
+      });
+
+      toast.success(`Bienvenue ${data.login.user.username} !`);
+      setTimeout(() => navigate("/"), 1500);
     } catch (err: any) {
-      alert("Erreur : " + err.message);
+      toast.error("Erreur : " + err.message);
     }
   };
 

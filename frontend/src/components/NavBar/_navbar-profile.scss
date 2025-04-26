@@ -1,0 +1,39 @@
+.navbar__profile {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 999px;
+  padding: 0.3rem 1rem;
+  gap: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px $secondary;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $tertiary;
+  }
+}
+
+.navbar__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: $secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.navbar__username {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .navbar__profile {
+    padding: 0.2rem 0.8rem;
+  }
+}

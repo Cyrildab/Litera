@@ -72,3 +72,9 @@ export const SettingsIcon = ({ color = "$primary", fontSize = "1.5em", ...props 
 export const UserIcon = ({ color = "$primary", fontSize = "1.5em", ...props }: Omit<IconProps, "icon">) => (
   <Icon icon="ph:user" color={color} fontSize={fontSize} {...props} />
 );
+
+export const LogoutIcon = () => (
+  <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h5a2 2 0 012 2v1" />
+  </svg>
+);

@@ -1,10 +1,12 @@
 // src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import BookList from "./components/BookList";
 import BookDetail from "./components/BookDetail/BookDetail";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import MyBooks from "./components/MyBooks/MyBooks";
+import SearchResults from "./pages/SearchResults/SearchResults";
+import HomePage from "./pages/HomePage/HomePage";
 
 export const router = createBrowserRouter([
   {
@@ -12,8 +14,12 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        index: true,
+        element: <HomePage />,
+      },
+      {
         path: "books",
-        element: <BookList />,
+        element: <MyBooks />,
       },
       {
         path: "books/:id",
@@ -26,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/search",
+        element: <SearchResults />,
       },
     ],
   },

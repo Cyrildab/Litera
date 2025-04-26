@@ -5,8 +5,8 @@
   gap: 5rem;
 
   &__cover {
-    width: 35rem;
-    height: 50rem;
+    width: 30rem;
+    height: 45rem;
     margin-top: 6rem;
     margin-left: 6rem;
     box-shadow: 3px 3px 3px gray;
@@ -15,40 +15,41 @@
 
   &__container {
     margin-top: 6rem;
-  }
-
-  &__title {
-    font-size: 4rem;
-    font-family: $font-primary;
-    font-weight: bold;
-  }
-
-  &__author {
-    font-size: 3rem;
-    font-weight: 400;
-    font-family: $font-primary;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
-  }
-
-  &__gender {
-    font-size: 2rem;
-    font-weight: lighter;
-    font-family: $font-primary;
-    margin-bottom: 3rem;
-  }
-
-  &__description {
-    font-family: $font-primary;
-    font-size: 1.8rem;
-    margin-bottom: 3rem;
-    width: 60rem;
+    flex: 1;
+    padding: 0 2rem;
   }
 
   &__containertitleranking {
     display: flex;
     align-items: flex-end;
     gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-family: $font-primary;
+    font-weight: bold;
+  }
+
+  &__author {
+    font-size: 2rem;
+    margin: 2rem 0;
+    font-family: $font-primary;
+  }
+
+  &__gender {
+    font-size: 1.5rem;
+    font-family: $font-primary;
+    margin-bottom: 3rem;
+  }
+
+  &__description {
+    font-size: 1.3rem;
+    font-family: $font-primary;
+    margin-bottom: 3rem;
+    width: 60rem;
+    max-width: 100%;
   }
 
   &__rating {
@@ -59,7 +60,11 @@
       color: transparent;
       -webkit-text-stroke: 1px black;
       cursor: pointer;
-      transition: color 0.2s ease;
+      transition: color 0.2s, transform 0.2s;
+
+      &:hover {
+        transform: scale(1.2);
+      }
 
       &.filled {
         color: gold;
@@ -70,34 +75,118 @@
 
   &__btnenum {
     display: flex;
-    gap: 3rem;
-    margin-bottom: 5rem;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
 
     button {
       background-color: $secondary;
-      border-style: none;
+      border: none;
+      border-radius: 20rem;
       width: 10rem;
       height: 3.5rem;
-      border-radius: 20rem;
-      font-family: $font-primary;
       font-size: 1.5rem;
+      font-family: $font-primary;
+      transition: background 0.2s, transform 0.1s;
 
       &:hover {
         background-color: $tertiary;
         cursor: pointer;
       }
+
+      &.active {
+        background-color: $tertiary;
+        font-weight: bold;
+      }
     }
   }
 
   &__criticalbtn {
-    border-style: none;
-    background-color: white;
+    background: none;
+    border: none;
     font-family: $font-primary;
     font-size: 1.5rem;
     text-decoration: underline;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
 
     &:hover {
-      cursor: pointer;
+      transform: scale(1.05);
+    }
+  }
+
+  &__reviewform {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    margin-top: 2rem;
+  }
+
+  &__textarea {
+    width: 100%;
+    min-height: 8rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    resize: vertical;
+  }
+
+  &__submitbtn {
+    align-self: flex-end;
+    padding: 0.8rem 2rem;
+    border-radius: 2rem;
+    background-color: $secondary;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: $tertiary;
+    }
+  }
+
+  &__reviews,
+  &__allreviews {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+
+    h4 {
+      font-size: 1.7rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  &__editicon {
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  &__reviewcard {
+    background: $quaternary;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid black;
+
+    p {
+      font-size: 1.3rem;
+      color: #333;
+      line-height: 1.5;
     }
   }
 }
@@ -106,40 +195,47 @@
   .bookdetail {
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    padding: 1rem;
+    padding: 2rem;
+    gap: 0;
 
     &__cover {
-      width: 90%;
+      width: 70%;
       height: auto;
       margin: 0;
     }
 
     &__container {
       margin-top: 2rem;
-      padding: 1rem;
+      width: 100%;
+      padding: 0;
     }
 
-    &__description {
-      width: 100%;
-      font-size: 1.4rem;
+    &__containertitleranking {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
     }
 
     &__title {
-      font-size: 2.5rem;
+      font-size: 2rem;
+      text-align: center;
     }
 
     &__author,
     &__gender {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 1rem;
     }
 
-    &__rating {
-      font-size: 2rem;
+    &__description {
+      width: 100%;
+      font-size: 1.1rem;
+      text-align: center;
     }
 
     &__btnenum {
-      flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
 
@@ -150,8 +246,22 @@
       }
     }
 
-    &__criticalbtn {
-      font-size: 1.3rem;
+    &__rating {
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    &__reviewcard {
+      padding: 1rem;
+    }
+
+    &__allreviews {
+      gap: 0rem;
+      margin-bottom: 6rem;
+    }
+
+    &__reviews {
+      margin-bottom: 1rem;
     }
   }
 }

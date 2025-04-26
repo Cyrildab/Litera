@@ -1,0 +1,125 @@
+.navbar {
+  &__search-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    position: absolute;
+    right: 2rem;
+    font-size: 1.2rem;
+    color: #888;
+  }
+
+  &__searchbar {
+    border-style: none;
+    border-radius: 20rem;
+    width: 25rem;
+    height: 4rem;
+    padding-left: 3rem;
+    font-size: 1.3rem;
+  }
+
+  &__loading {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: #555;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    max-height: 20rem;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInDropdown 0.25s ease forwards;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+
+  &__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    color: black;
+    text-decoration: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.selected {
+      background-color: #e0e0e0;
+    }
+  }
+
+  &__dropdown-cover {
+    width: 3rem;
+    height: 4rem;
+    object-fit: cover;
+    border-radius: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  &__dropdown-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__dropdown-title {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+
+  &__dropdown-author {
+    font-size: 1.1rem;
+    color: #666;
+  }
+}
+
+@keyframes fadeInDropdown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar__searchbar {
+    width: 14rem;
+    height: 3rem;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+  }
+}

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const GET_BOOK = gql`
-  query GetBook($id: Float!) {
-    book(id: $id) {
+export const GET_GOOGLE_BOOK = gql`
+  query GetGoogleBook($id: String!) {
+    searchGoogleBooks(query: $id) {
       id
       title
       author
