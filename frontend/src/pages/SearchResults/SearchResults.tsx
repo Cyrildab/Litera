@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { SEARCH_GOOGLE_BOOKS } from "../../graphql/queries/searchGoogleBooks";
 import "./SearchResults.scss";
@@ -25,13 +25,13 @@ const SearchResults = () => {
           <p>Aucun résultat trouvé.</p>
         ) : (
           books.map((book: any) => (
-            <div key={book.id} className="search-results__item">
+            <Link to={`/books/${book.id}`} key={book.id} className="search-results__item">
               <img src={book.cover} alt={book.title} />
               <div>
                 <h3>{book.title}</h3>
                 <p>{book.author}</p>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </div>

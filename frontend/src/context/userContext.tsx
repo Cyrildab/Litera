@@ -7,6 +7,10 @@ interface User {
   id: number;
   username: string;
   email: string;
+  image: string;
+  description?: string;
+  birthday?: string;
+  gender?: boolean;
 }
 
 interface UserContextType {

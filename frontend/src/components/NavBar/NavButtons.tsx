@@ -13,7 +13,7 @@ const NavButtons = ({ user, loading, navigate }: any) => {
 
       {user ? (
         <>
-          <Profile username={user.username} />
+          <Profile username={user.username} image={user.image} />
           <LogoutButton navigate={navigate} />
         </>
       ) : (

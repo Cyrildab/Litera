@@ -43,7 +43,11 @@ const BookDetail = () => {
   const book = bookData?.getGoogleBook;
   const userBook = userBooksData?.getUserBooks?.find((b: any) => b.googleBookId === book?.id);
   const allReviewsForThisBook = reviewsData?.getAllReviewsForBook || [];
-  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id);
+  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id && r.review && r.review.trim() !== "");
+
+  const ratings = allReviewsForThisBook.map((r: any) => r.rating).filter((r: any) => typeof r === "number");
+  const totalRatings = ratings.length;
+  const averageRating = ratings.length > 0 ? (ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length).toFixed(2) : null;
 
   useEffect(() => {
     if (book && userBook) {
@@ -131,8 +135,12 @@ const BookDetail = () => {
               );
             })}
           </div>
+          {averageRating && (
+            <div className="bookdetail__average">
+              {averageRating} ★ ({totalRatings} {totalRatings === 1 ? "avis" : "avis"})
+            </div>
+          )}
         </div>
-
         <h2 className="bookdetail__author">{book.author}</h2>
         <h3 className="bookdetail__gender">{book.gender}</h3>
         <p className="bookdetail__description">{book.description}</p>

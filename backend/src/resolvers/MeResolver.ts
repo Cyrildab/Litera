@@ -14,9 +14,16 @@ export class MeResolver {
     if (!token) return null;
 
     try {
-      const decoded: any = jwt.verify(token, JWT_SECRET);
-      return await userRepo.findOneBy({ id: decoded.userId });
+      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || "default_secret");
+      const user = await userRepo.findOneBy({ id: decoded.userId });
+
+      if (user?.birthday && typeof user.birthday === "string") {
+        user.birthday = new Date(user.birthday + "T00:00:00Z");
+      }
+
+      return user;
     } catch (err) {
+      console.error("Erreur dans me:", err);
       return null;
     }
   }
