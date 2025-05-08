@@ -122,4 +122,27 @@ export class UserBookResolver {
     userBook.review = review;
     return await repo.save(userBook);
   }
+
+  @Query(() => [UserBookWithDetails])
+  async getUserBooksById(@Arg("userId", () => Int) userId: number): Promise<UserBookWithDetails[]> {
+    const userBooks = await AppDataSource.getRepository(UserBook).find({
+      where: { user: { id: userId } },
+      relations: ["user"],
+    });
+
+    return await Promise.all(
+      userBooks.map(async (userBook) => {
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${userBook.googleBookId}`);
+        const json = await res.json();
+        const volume = json.volumeInfo;
+
+        return {
+          ...userBook,
+          title: volume?.title || "Titre inconnu",
+          author: volume?.authors?.[0] || "Auteur inconnu",
+          cover: volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || "",
+        };
+      })
+    );
+  }
 }

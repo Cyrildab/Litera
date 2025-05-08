@@ -10,6 +10,7 @@ export const GET_REVIEWS_FOR_BOOK = gql`
       user {
         id
         username
+        image
       }
     }
   }

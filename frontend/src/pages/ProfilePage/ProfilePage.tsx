@@ -16,18 +16,21 @@ type FormData = {
 const ProfilePage = () => {
   const { user } = useUser();
   const [editingField, setEditingField] = useState<keyof FormData | null>(null);
+  const [editingImage, setEditingImage] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const { register, setValue, watch } = useForm<FormData>();
 
   if (!user) return <div>Chargement...</div>;
 
   const onSubmit = async () => {
-    if (!editingField) return;
+    const field = editingField || (editingImage ? "image" : null);
+    if (!field) return;
 
-    const value = watch(editingField);
+    const value = watch(field);
     const data: Record<string, any> = {};
 
-    if (editingField === "birthday") {
+    if (field === "birthday") {
       if (value) {
         try {
           const iso = new Date(value).toISOString();
@@ -38,11 +41,11 @@ const ProfilePage = () => {
           return;
         }
       }
-    } else if (editingField === "gender") {
+    } else if (field === "gender") {
       if (value === "true") data.gender = true;
       else if (value === "false") data.gender = false;
     } else if (typeof value === "string" && value.trim() !== "") {
-      data[editingField] = value;
+      data[field] = value;
     }
 
     try {
@@ -51,6 +54,8 @@ const ProfilePage = () => {
         refetchQueries: ["Me"],
       });
       setEditingField(null);
+      setEditingImage(false);
+      setPreviewImage(null);
     } catch (error) {
       console.error(error);
       alert("Erreur lors de la mise à jour");
@@ -68,126 +73,142 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="profile">
-      <div className="profile__card">
-        <h1 className="profile__title">Mon profil</h1>
-        <img src={user.image || "/default-avatar.png"} alt="avatar" className="profile__avatar" />
+    <>
+      <div className="profile">
+        <div className="profile__card">
+          <h1 className="profile__title">Mon profil</h1>
 
-        <form onSubmit={(e) => e.preventDefault()} className="profile__form">
-          {/* Nom d'utilisateur */}
-          <div className="profile__field">
-            <label>Nom d'utilisateur :</label>
-            {editingField === "username" ? (
+          <div className="profile__avatar-wrapper">
+            {previewImage || user.image ? (
+              <img src={previewImage || user.image} alt="avatar" className="profile__avatar" />
+            ) : (
+              <div className="profile__avatar--initial">{user.username?.charAt(0).toUpperCase() || "?"}</div>
+            )}
+            {!editingImage ? (
+              <button
+                type="button"
+                className="profile__edit-icon"
+                onClick={() => {
+                  setValue("image", user.image || "");
+                  setPreviewImage(user.image || null);
+                  setEditingImage(true);
+                }}
+              >
+                ✏️
+              </button>
+            ) : (
               <div className="profile__edit">
-                <input {...register("username")} className="profile__input" />
+                <input
+                  {...register("image")}
+                  className="profile__input"
+                  onChange={(e) => {
+                    setValue("image", e.target.value);
+                    setPreviewImage(e.target.value);
+                  }}
+                />
                 <button type="button" onClick={onSubmit} className="profile__save">
                   💾
-                </button>
-              </div>
-            ) : (
-              <div className="profile__display">
-                <span>{user.username}</span>
-                <button type="button" onClick={() => startEdit("username", user.username)}>
-                  ✏️
                 </button>
               </div>
             )}
           </div>
 
-          {/* Description */}
-          <div className="profile__field">
-            <label>Description :</label>
-            {editingField === "description" ? (
-              <div className="profile__edit">
-                <textarea {...register("description")} className="profile__input" />
-                <button type="button" onClick={onSubmit} className="profile__save">
-                  💾
-                </button>
-              </div>
-            ) : (
-              <div className="profile__display">
-                <span>{user.description || "Aucune description"}</span>
-                <button type="button" onClick={() => startEdit("description", user.description)}>
-                  ✏️
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Image */}
-          <div className="profile__field">
-            <label>Image (URL) :</label>
-            {editingField === "image" ? (
-              <div className="profile__edit">
-                <input {...register("image")} className="profile__input" />
-                <button type="button" onClick={onSubmit} className="profile__save">
-                  💾
-                </button>
-              </div>
-            ) : (
-              <div className="profile__display">
-                <span>{user.image || "Aucune image"}</span>
-                <button type="button" onClick={() => startEdit("image", user.image)}>
-                  ✏️
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Date de naissance */}
-          <div className="profile__field">
-            <label>Date de naissance :</label>
-            {editingField === "birthday" ? (
-              <div className="profile__edit">
-                <input type="date" {...register("birthday")} className="profile__input" />
-                <button type="button" onClick={onSubmit} className="profile__save">
-                  💾
-                </button>
-              </div>
-            ) : (
-              <div className="profile__display">
-                <span>{user.birthday ? new Date(user.birthday).toLocaleDateString("fr-FR") : "--"}</span>
-                <button type="button" onClick={() => startEdit("birthday", user.birthday)}>
-                  ✏️
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Genre */}
-          <div className="profile__field">
-            <label>Genre :</label>
-            {editingField === "gender" ? (
-              <div className="profile__edit">
-                <select {...register("gender")} className="profile__input">
-                  <option value="">--</option>
-                  <option value="true">Homme</option>
-                  <option value="false">Femme</option>
-                </select>
-                <button type="button" onClick={onSubmit} className="profile__save">
-                  💾
-                </button>
-              </div>
-            ) : (
-              <div className="profile__display">
-                <span>{user.gender === true ? "Homme" : user.gender === false ? "Femme" : "--"}</span>
-                <button type="button" onClick={() => startEdit("gender", String(user.gender))}>
-                  ✏️
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Email */}
-          <div className="profile__field">
-            <label>Email :</label>
-            <div className="profile__display">
-              <span>{user.email}</span>
+          <form onSubmit={(e) => e.preventDefault()} className="profile__form">
+            {/* Nom d'utilisateur */}
+            <div className="profile__field">
+              <label>Nom d'utilisateur :</label>
+              {editingField === "username" ? (
+                <div className="profile__edit">
+                  <input {...register("username")} className="profile__input" />
+                  <button type="button" onClick={onSubmit} className="profile__save">
+                    💾
+                  </button>
+                </div>
+              ) : (
+                <div className="profile__display">
+                  <span>{user.username}</span>
+                  <button type="button" onClick={() => startEdit("username", user.username)} className="profile__edit">
+                    ✏️
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
-        </form>
+
+            {/* Description */}
+            <div className="profile__field">
+              <label>Description :</label>
+              {editingField === "description" ? (
+                <div className="profile__edit">
+                  <textarea {...register("description")} className="profile__input" />
+                  <button type="button" onClick={onSubmit} className="profile__save">
+                    💾
+                  </button>
+                </div>
+              ) : (
+                <div className="profile__display">
+                  <span>{user.description || "Aucune description"}</span>
+                  <button type="button" onClick={() => startEdit("description", user.description)} className="profile__edit">
+                    ✏️
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Date de naissance */}
+            <div className="profile__field">
+              <label>Date de naissance :</label>
+              {editingField === "birthday" ? (
+                <div className="profile__edit">
+                  <input type="date" {...register("birthday")} className="profile__input" />
+                  <button type="button" onClick={onSubmit} className="profile__save">
+                    💾
+                  </button>
+                </div>
+              ) : (
+                <div className="profile__display">
+                  <span>{user.birthday ? new Date(user.birthday).toLocaleDateString("fr-FR") : "--"}</span>
+                  <button type="button" onClick={() => startEdit("birthday", user.birthday)} className="profile__edit">
+                    ✏️
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Genre */}
+            <div className="profile__field">
+              <label>Genre :</label>
+              {editingField === "gender" ? (
+                <div className="profile__edit">
+                  <select {...register("gender")} className="profile__input">
+                    <option value="">--</option>
+                    <option value="true">Homme</option>
+                    <option value="false">Femme</option>
+                  </select>
+                  <button type="button" onClick={onSubmit} className="profile__save">
+                    💾
+                  </button>
+                </div>
+              ) : (
+                <div className="profile__display">
+                  <span>{user.gender === true ? "Homme" : user.gender === false ? "Femme" : "--"}</span>
+                  <button type="button" onClick={() => startEdit("gender", String(user.gender))} className="profile__edit">
+                    ✏️
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Email */}
+            <div className="profile__field">
+              <label>Email :</label>
+              <div className="profile__display">
+                <span>{user.email}</span>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

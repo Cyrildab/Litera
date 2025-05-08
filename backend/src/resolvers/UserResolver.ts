@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entities/User";
 import { MyContext } from "../types/MyContext";
 import { UpdateUserInput } from "../inputs/UpdateUserInput";
@@ -29,5 +29,10 @@ export class UserResolver {
     }
 
     return userToReturn;
+  }
+
+  @Query(() => User, { nullable: true })
+  async getUserById(@Arg("userId", () => Int) userId: number): Promise<User | null> {
+    return await AppDataSource.getRepository(User).findOneBy({ id: userId });
   }
 }

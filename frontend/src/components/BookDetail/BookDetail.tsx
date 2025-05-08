@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/userContext";
 import { toast } from "react-toastify";
@@ -39,6 +39,8 @@ const BookDetail = () => {
   const [review, setReview] = useState<string>("");
   const [showReviewInput, setShowReviewInput] = useState(false);
   const [isEditingReview, setIsEditingReview] = useState(false);
+
+  const navigate = useNavigate();
 
   const book = bookData?.getGoogleBook;
   const userBook = userBooksData?.getUserBooks?.find((b: any) => b.googleBookId === book?.id);
@@ -178,9 +180,15 @@ const BookDetail = () => {
               </span>
             </h4>
             <div className="bookdetail__reviewcard">
-              <p>
-                <strong>{userBook.user?.username}</strong> : {userBook.review}
-              </p>
+              <div className="bookdetail__user">
+                {user?.image ? (
+                  <img src={user.image} alt="avatar" className="bookdetail__avatar" />
+                ) : (
+                  <div className="bookdetail__avatar--initial">{user?.username.charAt(0).toUpperCase()}</div>
+                )}
+                <strong>{user?.username}</strong>
+              </div>
+              <p>{userBook.review}</p>
             </div>
           </div>
         )}
@@ -197,9 +205,15 @@ const BookDetail = () => {
             <h4>Critiques des autres lecteurs :</h4>
             {otherUsersReviews.map((reviewBook: any) => (
               <div key={reviewBook.id} className="bookdetail__reviewcard">
-                <p>
-                  <strong>{reviewBook.user.username}</strong> : {reviewBook.review}
-                </p>
+                <div className="bookdetail__user" onClick={() => navigate(`/users/${reviewBook.user.id}`)} style={{ cursor: "pointer" }}>
+                  {reviewBook.user.image ? (
+                    <img src={reviewBook.user.image} alt="avatar" className="bookdetail__avatar" />
+                  ) : (
+                    <div className="bookdetail__avatar--initial">{reviewBook.user.username.charAt(0).toUpperCase()}</div>
+                  )}
+                  <strong className="clickable-username">{reviewBook.user.username}</strong>
+                </div>
+                <p>{reviewBook.review}</p>
               </div>
             ))}
           </div>

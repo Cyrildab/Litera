@@ -8,6 +8,7 @@ import MyBooks from "./components/MyBooks/MyBooks";
 import SearchResults from "./pages/SearchResults/SearchResults";
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import PublicProfilePage from "./pages/PublicProfilePage.tsx/PublicProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/users/:userId",
+        element: <PublicProfilePage />,
       },
     ],
   },

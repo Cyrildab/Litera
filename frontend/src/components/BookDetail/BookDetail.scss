@@ -246,13 +246,18 @@
       }
     }
 
+    &__average {
+      margin-bottom: 1rem;
+    }
+
     &__rating {
       justify-content: center;
       font-size: 2rem;
     }
 
     &__reviewcard {
-      padding: 1rem;
+      padding: 0.5rem;
+      margin-bottom: 0.7rem;
     }
 
     &__allreviews {
@@ -263,5 +268,46 @@
     &__reviews {
       margin-bottom: 1rem;
     }
+  }
+}
+
+.bookdetail__user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+
+  strong {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+}
+
+.bookdetail__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.bookdetail__avatar--initial {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: $secondary;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clickable-username {
+  text-decoration: none;
+
+  &:hover {
+    cursor: pointer;
   }
 }

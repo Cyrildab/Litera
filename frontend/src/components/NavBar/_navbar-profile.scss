@@ -30,10 +30,35 @@
   font-weight: 600;
   font-size: 1.4rem;
   color: black;
+  max-width: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {
-  .navbar__profile {
-    padding: 0.2rem 0.8rem;
+  .navbar__username {
+    font-size: 1.1rem;
+    max-width: 6rem;
   }
+}
+
+.navbar__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.navbar__avatar--initial {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: $secondary;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

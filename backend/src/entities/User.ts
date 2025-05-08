@@ -25,7 +25,7 @@ export class User {
   password!: string;
 
   @Field({ nullable: true })
-  @Column({ length: 250, nullable: true })
+  @Column({ length: 1000, nullable: true })
   image?: string;
 
   @Field({ nullable: true })
