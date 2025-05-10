@@ -16,6 +16,10 @@
     right: 2rem;
     font-size: 1.2rem;
     color: #888;
+    @media (max-width: 768px) {
+      font-size: 0.8rem;
+      right: 1rem;
+    }
   }
 
   &__searchbar {
@@ -117,9 +121,9 @@
 
 @media (max-width: 768px) {
   .navbar__searchbar {
-    width: 14rem;
-    height: 3rem;
-    font-size: 0.8rem;
-    padding-left: 1rem;
+    width: 10rem;
+    height: 2rem;
+    font-size: 0.5rem;
+    padding-left: 0.7rem;
   }
 }

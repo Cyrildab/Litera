@@ -1,0 +1,144 @@
+@import "../../assets/variables";
+
+.pending-requests {
+  background: #f9f9fc;
+  padding: 2rem;
+  border-radius: 1rem;
+
+  &__title {
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  &__loader,
+  &__empty {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  &__card {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  &__avatar,
+  &__avatar--initial {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    flex-shrink: 0;
+  }
+
+  &__avatar--initial {
+    background-color: $secondary;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__username {
+    font-size: 1.3rem;
+    color: #222;
+    font-weight: 600;
+    margin-left: 1rem;
+    flex: 1;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__button {
+    background-color: $secondary;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: $tertiary;
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    &.refuse {
+      background-color: #eee;
+      color: #333;
+
+      &:hover {
+        background-color: #ddd;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .pending-requests {
+    padding: 1rem;
+
+    &__title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    &__avatar--initial {
+      font-size: 1rem;
+    }
+
+    &__avatar,
+    &__avatar--initial {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    &__card {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &__username {
+      margin-left: 0;
+      font-size: 1rem;
+    }
+
+    &__buttons {
+      align-self: flex-end;
+    }
+
+    &__button {
+      padding: 0.2rem 0.5rem;
+      font-size: 1rem;
+      &.refuse,
+      &.accept {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

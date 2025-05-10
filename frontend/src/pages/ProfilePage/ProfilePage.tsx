@@ -4,6 +4,7 @@ import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUser";
 import { useUser } from "../../context/userContext";
 import { useState } from "react";
 import "./ProfilePage.scss";
+import MyBooks from "../../components/MyBooks/MyBooks";
 
 type FormData = {
   username?: string;
@@ -208,6 +209,7 @@ const ProfilePage = () => {
           </form>
         </div>
       </div>
+      <MyBooks />
     </>
   );
 };

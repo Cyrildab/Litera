@@ -4,6 +4,9 @@
   h2 {
     font-size: 2rem;
     margin-bottom: 2rem;
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 
   &__list {
@@ -37,6 +40,43 @@
     p {
       color: #555;
       font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .search-results__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .search-results__item {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 6rem;
+      height: 9rem;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      margin-bottom: 0;
+    }
+
+    div {
+      flex: 1;
+      text-align: left;
+
+      h3 {
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      p {
+        font-size: 0.95rem;
+        margin-top: 0.3rem;
+      }
     }
   }
 }

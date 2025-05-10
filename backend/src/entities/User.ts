@@ -1,6 +1,7 @@
 import { Field, ObjectType, ID } from "type-graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserBook } from "./UserBook";
+import { Friendship } from "./Friendship";
 
 @ObjectType()
 @Entity()
@@ -38,4 +39,10 @@ export class User {
 
   @OneToMany(() => UserBook, (userBook) => userBook.user)
   userBooks?: UserBook[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.requester)
+  sentFriendRequests!: Friendship[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.receiver)
+  receivedFriendRequests!: Friendship[];
 }

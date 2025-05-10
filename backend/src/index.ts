@@ -40,6 +40,10 @@ async function startServer() {
 
       return { req: { ...req, user }, res };
     },
+    formatError: (error) => {
+      console.error("GraphQL Error:", error);
+      return error;
+    },
   });
 
   await server.start();

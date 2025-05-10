@@ -7,8 +7,9 @@ import { LogoutResolver } from "./resolvers/LogoutResolver";
 import { GoogleBooksResolver } from "./resolvers/GoogleBooksResolver";
 import { UserBookResolver } from "./resolvers/UserBookResolver";
 import { UserResolver } from "./resolvers/UserResolver";
+import { FriendshipResolver } from "./resolvers/FriendshipResolver";
 
 export const createSchema = () =>
   buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver, LogoutResolver, GoogleBooksResolver, UserBookResolver, UserResolver],
+    resolvers: [RegisterResolver, LoginResolver, MeResolver, LogoutResolver, GoogleBooksResolver, UserBookResolver, UserResolver, FriendshipResolver],
   });
