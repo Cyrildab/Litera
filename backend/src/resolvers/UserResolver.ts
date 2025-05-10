@@ -35,4 +35,19 @@ export class UserResolver {
   async getUserById(@Arg("userId", () => Int) userId: number): Promise<User | null> {
     return await AppDataSource.getRepository(User).findOneBy({ id: userId });
   }
+
+  @Query(() => [User])
+  async searchUsers(@Arg("query") query: string): Promise<User[]> {
+    return AppDataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .where("LOWER(user.username) LIKE LOWER(:query)", { query: `%${query}%` })
+      .select(["user.id", "user.username", "user.image"])
+      .getMany();
+  }
+
+  @Query(() => Boolean)
+  async isUsernameTaken(@Arg("username") username: string): Promise<boolean> {
+    const user = await AppDataSource.getRepository(User).findOneBy({ username });
+    return !!user;
+  }
 }

@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  book: any;
+  item: any;
   index: number;
   selectedIndex: number;
   setSearch: (val: string) => void;
@@ -9,24 +9,34 @@ type Props = {
   setSelectedIndex: (val: number) => void;
 };
 
-const SearchResultItem = ({ book, index, selectedIndex, setSearch, setResults, setSelectedIndex }: Props) => {
+const SearchResultItem = ({ item, index, selectedIndex, setSearch, setResults, setSelectedIndex }: Props) => {
+  const navigate = useNavigate();
+  const isSelected = index === selectedIndex;
+
+  const handleClick = () => {
+    setSearch("");
+    setResults([]);
+    setSelectedIndex(-1);
+    navigate(item.type === "user" ? `/users/${item.id}` : `/books/${item.id}`);
+  };
+
   return (
-    <Link
-      id={`search-item-${index}`}
-      to={`/books/${book.id}`}
-      onClick={() => {
-        setSearch("");
-        setResults([]);
-        setSelectedIndex(-1);
-      }}
-      className={`navbar__dropdown-item ${index === selectedIndex ? "selected" : ""}`}
-    >
-      <img src={book.cover} alt={book.title} className="navbar__dropdown-cover" />
+    <div id={`search-item-${index}`} className={`navbar__dropdown-item ${isSelected ? "selected" : ""}`} onClick={handleClick}>
+      {item.type === "user" ? (
+        item.image ? (
+          <img src={item.image} alt="avatar" className="navbar__dropdown-cover" />
+        ) : (
+          <div className="navbar__dropdown-initial">{item.username?.[0]?.toUpperCase() || "?"}</div>
+        )
+      ) : (
+        <img src={item.cover || "/placeholder.jpg"} alt={item.title} className="navbar__dropdown-cover" />
+      )}
+
       <div className="navbar__dropdown-info">
-        <span className="navbar__dropdown-title">{book.title}</span>
-        <span className="navbar__dropdown-author">{book.author}</span>
+        <span className="navbar__dropdown-title">{item.username || item.title}</span>
+        <span className="navbar__dropdown-author">{item.author || (item.type === "user" ? "Utilisateur LitEra" : "")}</span>
       </div>
-    </Link>
+    </div>
   );
 };
 

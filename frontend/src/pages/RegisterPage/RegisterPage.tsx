@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useApolloClient } from "@apollo/client";
+import { useMutation, useLazyQuery, useApolloClient } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { REGISTER_MUTATION } from "../../graphql/mutations/register";
 import { LOGIN_MUTATION } from "../../graphql/mutations/login";
+import { IS_USERNAME_TAKEN } from "../../graphql/queries/isUsernameTaken";
 import InputField from "../../components/ImputField/ImputField";
 import { isStrongPassword } from "../../utils/validators";
 import { EyeOnIcon, EyeOffIcon } from "../../utils/iconList";
@@ -28,6 +29,7 @@ const RegisterPage = () => {
 
   const [registerUser] = useMutation(REGISTER_MUTATION);
   const [loginUser] = useMutation(LOGIN_MUTATION);
+  const [checkUsernameTaken] = useLazyQuery(IS_USERNAME_TAKEN);
   const apolloClient = useApolloClient();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -51,6 +53,18 @@ const RegisterPage = () => {
     }
 
     try {
+      const { data: usernameCheck } = await checkUsernameTaken({
+        variables: { username: formData.username },
+      });
+
+      if (usernameCheck?.isUsernameTaken) {
+        setError("username", {
+          type: "manual",
+          message: "Ce nom d'utilisateur est déjà pris.",
+        });
+        return;
+      }
+
       await registerUser({
         variables: {
           username: formData.username,
@@ -66,16 +80,14 @@ const RegisterPage = () => {
         },
       });
 
-      await apolloClient.refetchQueries({
-        include: ["Me"],
-      });
+      await apolloClient.refetchQueries({ include: ["Me"] });
 
       toast.success("Inscription réussie !");
       setTimeout(() => navigate("/"), 2000);
     } catch (error: any) {
       setError("email", {
         type: "manual",
-        message: error.message,
+        message: error.message || "Une erreur est survenue",
       });
     }
   };
@@ -87,7 +99,10 @@ const RegisterPage = () => {
 
         <form className="register-page__form" onSubmit={handleSubmit(onSubmit)}>
           <InputField name="username" type="text" placeholderKey="Identifiant" register={register} required ariaLabel="Identifiant" />
+          {errors.username && <p className="register-page__error">{errors.username.message}</p>}
+
           <InputField name="email" type="email" placeholderKey="Email" register={register} required ariaLabel="Email" />
+          {errors.email && <p className="register-page__error">{errors.email.message}</p>}
 
           <div className="input-field-wrapper">
             <input
@@ -107,6 +122,7 @@ const RegisterPage = () => {
               {showPassword ? <EyeOffIcon /> : <EyeOnIcon />}
             </button>
           </div>
+          {errors.password && <p className="register-page__error">{errors.password.message}</p>}
 
           <div className="input-field-wrapper">
             <input
@@ -126,9 +142,7 @@ const RegisterPage = () => {
               {showConfirmPassword ? <EyeOffIcon /> : <EyeOnIcon />}
             </button>
           </div>
-
           {errors.confirmPassword && <p className="register-page__error">{errors.confirmPassword.message}</p>}
-          {errors.password && <p className="register-page__error">{errors.password.message}</p>}
 
           <button type="submit" className="register-page__button">
             S'inscrire

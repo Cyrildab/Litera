@@ -1,3 +1,5 @@
+@import "../../assets/variables";
+
 .search-results {
   padding: 3rem;
 
@@ -23,13 +25,29 @@
     cursor: pointer;
     text-decoration: none;
     color: black;
+    transition: transform 0.2s ease;
 
-    img {
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    img,
+    &__initial {
       width: 100%;
       height: 260px;
-      object-fit: cover;
       border-radius: 0.5rem;
+      object-fit: cover;
       margin-bottom: 1rem;
+    }
+
+    &__initial {
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      font-weight: bold;
+      color: white;
     }
 
     h3 {
@@ -56,12 +74,12 @@
     align-items: center;
     gap: 1rem;
 
-    img {
+    img,
+    .search-results__initial {
       width: 6rem;
       height: 9rem;
-      border-radius: 0.5rem;
-      object-fit: cover;
       margin-bottom: 0;
+      font-size: 2rem;
     }
 
     div {
@@ -78,5 +96,57 @@
         margin-top: 0.3rem;
       }
     }
+  }
+}
+
+.search-results__initial {
+  width: 100%;
+  height: 260px;
+  background-color: $secondary;
+  color: white;
+  font-size: 6rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    width: 6rem;
+    height: 9rem;
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+}
+
+.search-results__filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  button {
+    background-color: $secondary;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &.active {
+      background-color: $tertiary;
+      font-weight: bold;
+    }
+
+    &:hover {
+      background-color: $tertiary;
+    }
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
   }
 }

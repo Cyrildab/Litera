@@ -1,7 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUser";
 import { useUser } from "../../context/userContext";
+import { IS_USERNAME_TAKEN } from "../../graphql/queries/isUsernameTaken";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import "./ProfilePage.scss";
 import MyBooks from "../../components/MyBooks/MyBooks";
@@ -20,6 +22,7 @@ const ProfilePage = () => {
   const [editingImage, setEditingImage] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const [checkUsernameTaken] = useLazyQuery(IS_USERNAME_TAKEN);
   const { register, setValue, watch } = useForm<FormData>();
 
   if (!user) return <div>Chargement...</div>;
@@ -46,6 +49,15 @@ const ProfilePage = () => {
       if (value === "true") data.gender = true;
       else if (value === "false") data.gender = false;
     } else if (typeof value === "string" && value.trim() !== "") {
+      if (field === "username" && value !== user.username) {
+        const { data: usernameCheck } = await checkUsernameTaken({ variables: { username: value } });
+        if (usernameCheck?.isUsernameTaken) {
+          toast.error("Ce nom d'utilisateur est déjà pris.", {
+            icon: <span>❌</span>,
+          });
+          return;
+        }
+      }
       data[field] = value;
     }
 
@@ -59,7 +71,11 @@ const ProfilePage = () => {
       setPreviewImage(null);
     } catch (error) {
       console.error(error);
-      alert("Erreur lors de la mise à jour");
+      if ((error as any)?.message?.includes("duplicate key value") || (error as any)?.graphQLErrors?.[0]?.message?.includes("duplicate")) {
+        alert("Ce nom d'utilisateur est déjà utilisé.");
+      } else {
+        alert("Erreur lors de la mise à jour");
+      }
     }
   };
 

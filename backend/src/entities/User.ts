@@ -11,7 +11,7 @@ export class User {
   id!: number;
 
   @Field()
-  @Column({ length: 20 })
+  @Column({ length: 20, unique: true })
   username!: string;
 
   @Field({ nullable: true })

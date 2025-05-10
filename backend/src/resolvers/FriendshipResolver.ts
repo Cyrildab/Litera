@@ -183,4 +183,25 @@ export class FriendshipResolver {
       throw err;
     }
   }
+
+  @Mutation(() => Boolean)
+  async removeFriend(@Arg("userId", () => Int) userId: number, @Ctx() ctx: MyContext): Promise<boolean> {
+    const currentUser = ctx.req.user;
+    if (!currentUser) throw new Error("Non authentifié");
+
+    const repo = AppDataSource.getRepository(Friendship);
+
+    const friendship = await repo.findOne({
+      where: [
+        { requester: { id: currentUser.id }, receiver: { id: userId }, accepted: true },
+        { requester: { id: userId }, receiver: { id: currentUser.id }, accepted: true },
+      ],
+      relations: ["requester", "receiver"],
+    });
+
+    if (!friendship) throw new Error("Aucune amitié trouvée");
+
+    await repo.remove(friendship);
+    return true;
+  }
 }
