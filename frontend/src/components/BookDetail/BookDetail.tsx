@@ -23,71 +23,49 @@ enum ReadingStatus {
 const BookDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const { data: bookData, loading, error } = useQuery(GET_GOOGLE_BOOK, { variables: { id } });
-  const { data: userBooksData, refetch: refetchUserBooks } = useQuery(GET_USER_BOOKS);
-  const { data: reviewsData, refetch: refetchReviews } = useQuery(GET_REVIEWS_FOR_BOOK, { variables: { googleBookId: id } });
+  const { data: userBooksData, refetch: refetchUserBooks } = useQuery(GET_USER_BOOKS, { fetchPolicy: "network-only" });
+  const { data: reviewsData, refetch: refetchReviews } = useQuery(GET_REVIEWS_FOR_BOOK, { variables: { googleBookId: id }, fetchPolicy: "network-only" });
 
-  const [addUserBook] = useMutation(ADD_USER_BOOK, {
-    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
-    awaitRefetchQueries: true,
-  });
-
-  const [rateUserBook] = useMutation(RATE_USER_BOOK, {
-    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
-    awaitRefetchQueries: true,
-  });
-
-  const [reviewUserBook] = useMutation(REVIEW_USER_BOOK, {
-    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
-    awaitRefetchQueries: true,
-  });
+  const [addUserBook] = useMutation(ADD_USER_BOOK);
+  const [rateUserBook] = useMutation(RATE_USER_BOOK);
+  const [reviewUserBook] = useMutation(REVIEW_USER_BOOK);
 
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<ReadingStatus | null>(null);
-
   const [review, setReview] = useState<string>("");
   const [showReviewInput, setShowReviewInput] = useState(false);
   const [isEditingReview, setIsEditingReview] = useState(false);
 
-  const navigate = useNavigate();
-
   const book = bookData?.getGoogleBook;
   const userBook = userBooksData?.getUserBooks?.find((b: any) => b.googleBookId === book?.id);
   const allReviewsForThisBook = reviewsData?.getAllReviewsForBook || [];
-  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id && r.review && r.review.trim() !== "");
+  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id && r.review?.trim() !== "");
 
   const ratings = allReviewsForThisBook.map((r: any) => r.rating).filter((r: any) => typeof r === "number");
   const totalRatings = ratings.length;
-  const averageRating = ratings.length > 0 ? (ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length).toFixed(2) : null;
+  const averageRating = ratings.length > 0 ? (ratings.reduce((a: any, b: any) => a + b, 0) / ratings.length).toFixed(2) : null;
 
   useEffect(() => {
-    if (book && userBook) {
+    if (userBook) {
       setSelectedStatus(userBook.status);
       setSelectedRating(userBook.rating ?? null);
     }
-  }, [book, userBook]);
+  }, [userBook]);
 
-  if (loading) return <p>Chargement...</p>;
-  if (error || !book) return <p>Erreur : Livre introuvable.</p>;
+  const refreshData = async () => {
+    await Promise.all([refetchUserBooks(), refetchReviews()]);
+  };
 
   const handleAdd = async (status: ReadingStatus) => {
     try {
-      const isAlreadyInLibrary = selectedStatus !== null;
+      const isAlreadyInLibrary = !!userBook;
       await addUserBook({ variables: { googleBookId: book.id, status } });
-      await refetchUserBooks();
-      await refetchReviews();
-      setSelectedStatus(status);
-
-      const statusLabels: Record<ReadingStatus, string> = {
-        TO_READ: "À lire",
-        IN_PROGRESS: "En cours",
-        ABANDONED: "Abandonné",
-        READ: "Lu",
-      };
-
-      toast.success(isAlreadyInLibrary ? `Statut modifié en : ${statusLabels[status]}` : "Ajouté à vos livres !");
+      await refreshData();
+      toast.success(isAlreadyInLibrary ? "Statut modifié !" : "Ajouté à vos livres !");
     } catch (e) {
       console.error(e);
       toast.error("Erreur lors de l'ajout.");
@@ -100,13 +78,11 @@ const BookDetail = () => {
         await handleAdd(ReadingStatus.READ);
       }
       await rateUserBook({ variables: { googleBookId: book.id, rating } });
-      await refetchUserBooks();
-      await refetchReviews();
-      setSelectedRating(rating);
-      toast.success(`Note modifiée en : ${rating} ★`);
+      await refreshData();
+      toast.success(`Note enregistrée : ${rating} ★`);
     } catch (e) {
       console.error(e);
-      toast.error("Erreur lors de la modification de la note.");
+      toast.error("Erreur lors de la notation.");
     }
   };
 
@@ -114,17 +90,19 @@ const BookDetail = () => {
     if (!review.trim()) return;
     try {
       await reviewUserBook({ variables: { googleBookId: book.id, review } });
-      await refetchUserBooks();
-      await refetchReviews();
-      toast.success(isEditingReview ? "Critique mise à jour !" : "Critique enregistrée !");
+      await refreshData();
       setShowReviewInput(false);
       setIsEditingReview(false);
       setReview("");
+      toast.success(isEditingReview ? "Critique mise à jour" : "Critique enregistrée !");
     } catch (e) {
       console.error(e);
-      toast.error("Erreur lors de l'envoi de la critique.");
+      toast.error("Erreur lors de la critique.");
     }
   };
+
+  if (loading) return <p>Chargement...</p>;
+  if (error || !book) return <p>Erreur : Livre introuvable.</p>;
 
   return (
     <div className="bookdetail">
@@ -175,6 +153,7 @@ const BookDetail = () => {
             )}
           </>
         )}
+
         {userBook?.review && !isEditingReview && (
           <div className="bookdetail__reviews">
             <h4>
@@ -203,6 +182,7 @@ const BookDetail = () => {
             </div>
           </div>
         )}
+
         {showReviewInput && (
           <div className="bookdetail__reviewform">
             <textarea className="bookdetail__textarea" value={review} onChange={(e) => setReview(e.target.value)} placeholder="Écris ta critique ici..." />
@@ -211,6 +191,7 @@ const BookDetail = () => {
             </button>
           </div>
         )}
+
         {otherUsersReviews.length > 0 && (
           <div className="bookdetail__allreviews">
             <h4>Critiques des autres lecteurs :</h4>
