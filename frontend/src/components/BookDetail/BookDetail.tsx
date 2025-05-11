@@ -28,9 +28,20 @@ const BookDetail = () => {
   const { data: userBooksData, refetch: refetchUserBooks } = useQuery(GET_USER_BOOKS);
   const { data: reviewsData, refetch: refetchReviews } = useQuery(GET_REVIEWS_FOR_BOOK, { variables: { googleBookId: id } });
 
-  const [addUserBook] = useMutation(ADD_USER_BOOK);
-  const [rateUserBook] = useMutation(RATE_USER_BOOK);
-  const [reviewUserBook] = useMutation(REVIEW_USER_BOOK);
+  const [addUserBook] = useMutation(ADD_USER_BOOK, {
+    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
+    awaitRefetchQueries: true,
+  });
+
+  const [rateUserBook] = useMutation(RATE_USER_BOOK, {
+    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
+    awaitRefetchQueries: true,
+  });
+
+  const [reviewUserBook] = useMutation(REVIEW_USER_BOOK, {
+    refetchQueries: ["GetUserBooks", "GetAllReviewsForBook"],
+    awaitRefetchQueries: true,
+  });
 
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
