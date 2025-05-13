@@ -23,6 +23,7 @@ enum ReadingStatus {
 const BookDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const { data: bookData, loading, error } = useQuery(GET_GOOGLE_BOOK, { variables: { id } });
   const { data: userBooksData, refetch: refetchUserBooks } = useQuery(GET_USER_BOOKS);
@@ -40,16 +41,24 @@ const BookDetail = () => {
   const [showReviewInput, setShowReviewInput] = useState(false);
   const [isEditingReview, setIsEditingReview] = useState(false);
 
-  const navigate = useNavigate();
-
   const book = bookData?.getGoogleBook;
   const userBook = userBooksData?.getUserBooks?.find((b: any) => b.googleBookId === book?.id);
   const allReviewsForThisBook = reviewsData?.getAllReviewsForBook || [];
-  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id && r.review && r.review.trim() !== "");
+  const otherUsersReviews = allReviewsForThisBook.filter((r: any) => r.user.id !== user?.id && r.review?.trim());
 
   const ratings = allReviewsForThisBook.map((r: any) => r.rating).filter((r: any) => typeof r === "number");
   const totalRatings = ratings.length;
   const averageRating = ratings.length > 0 ? (ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length).toFixed(2) : null;
+
+  useEffect(() => {
+    setSelectedStatus(null);
+    setSelectedRating(null);
+    setReview("");
+    setShowReviewInput(false);
+    setIsEditingReview(false);
+    refetchUserBooks();
+    refetchReviews();
+  }, [id, refetchReviews, refetchUserBooks]);
 
   useEffect(() => {
     if (book && userBook) {
@@ -164,6 +173,7 @@ const BookDetail = () => {
             )}
           </>
         )}
+
         {userBook?.review && !isEditingReview && (
           <div className="bookdetail__reviews">
             <h4>
@@ -192,6 +202,7 @@ const BookDetail = () => {
             </div>
           </div>
         )}
+
         {showReviewInput && (
           <div className="bookdetail__reviewform">
             <textarea className="bookdetail__textarea" value={review} onChange={(e) => setReview(e.target.value)} placeholder="Écris ta critique ici..." />
@@ -200,6 +211,7 @@ const BookDetail = () => {
             </button>
           </div>
         )}
+
         {otherUsersReviews.length > 0 && (
           <div className="bookdetail__allreviews">
             <h4>Critiques des autres lecteurs :</h4>

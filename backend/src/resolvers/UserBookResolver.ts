@@ -4,6 +4,8 @@ import { User } from "../entities/User";
 import { MyContext } from "../types/MyContext";
 import AppDataSource from "../data-source";
 import { UserBookWithDetails } from "../types/UserBookWithDetails";
+import { logActivity } from "../utils/logActivity";
+import { ActivityType } from "../entities/Activity";
 
 @Resolver()
 export class UserBookResolver {
@@ -19,23 +21,97 @@ export class UserBookResolver {
     const user = await AppDataSource.getRepository(User).findOneBy({ id: userId });
     if (!user) throw new Error("Utilisateur introuvable.");
 
-    const existing = await AppDataSource.getRepository(UserBook).findOne({
+    const repo = AppDataSource.getRepository(UserBook);
+
+    const existing = await repo.findOne({
       where: { user: { id: userId }, googleBookId },
       relations: ["user"],
     });
 
+    const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${googleBookId}`);
+    const json = await res.json();
+    const volume = json.volumeInfo;
+
+    const title = volume?.title || null;
+    const author = volume?.authors?.[0] || null;
+    const cover = volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || null;
+
     if (existing) {
       existing.status = status;
-      return await AppDataSource.getRepository(UserBook).save(existing);
+      existing.title = title;
+      existing.author = author;
+      existing.cover = cover;
+      const updated = await repo.save(existing);
+
+      await logActivity({ type: ActivityType.STATUS, user, googleBookId, title, author, cover, status });
+
+      return updated;
     }
 
-    const newUserBook = AppDataSource.getRepository(UserBook).create({
-      googleBookId,
-      status,
-      user,
+    const newUserBook = repo.create({ googleBookId, status, user, title, author, cover });
+    const saved = await repo.save(newUserBook);
+
+    await logActivity({ type: ActivityType.STATUS, user, googleBookId, title, author, cover, status });
+
+    return saved;
+  }
+
+  @Mutation(() => UserBook)
+  async rateUserBook(@Arg("googleBookId") googleBookId: string, @Arg("rating", () => Int) rating: number, @Ctx() { req }: MyContext): Promise<UserBook> {
+    const userId = req.user?.id;
+    if (!userId) throw new Error("Non authentifié");
+
+    const repo = AppDataSource.getRepository(UserBook);
+    const userBook = await repo.findOne({
+      where: { user: { id: userId }, googleBookId },
+      relations: ["user"],
     });
 
-    return await AppDataSource.getRepository(UserBook).save(newUserBook);
+    if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
+
+    userBook.rating = rating;
+    const saved = await repo.save(userBook);
+
+    await logActivity({
+      type: ActivityType.RATING,
+      user: userBook.user,
+      googleBookId,
+      rating,
+      title: userBook.title,
+      author: userBook.author,
+      cover: userBook.cover,
+    });
+
+    return saved;
+  }
+
+  @Mutation(() => UserBook)
+  async reviewUserBook(@Arg("googleBookId") googleBookId: string, @Arg("review") review: string, @Ctx() { req }: MyContext): Promise<UserBook> {
+    const userId = req.user?.id;
+    if (!userId) throw new Error("Non authentifié");
+
+    const repo = AppDataSource.getRepository(UserBook);
+    const userBook = await repo.findOne({
+      where: { user: { id: userId }, googleBookId },
+      relations: ["user"],
+    });
+
+    if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
+
+    userBook.review = review;
+    const saved = await repo.save(userBook);
+
+    await logActivity({
+      type: ActivityType.REVIEW,
+      user: userBook.user,
+      googleBookId,
+      review,
+      title: userBook.title,
+      author: userBook.author,
+      cover: userBook.cover,
+    });
+
+    return saved;
   }
 
   @Query(() => [UserBookWithDetails], { name: "getUserBooks" })
@@ -87,40 +163,6 @@ export class UserBookResolver {
         };
       })
     );
-  }
-
-  @Mutation(() => UserBook)
-  async rateUserBook(@Arg("googleBookId") googleBookId: string, @Arg("rating", () => Int) rating: number, @Ctx() { req }: MyContext): Promise<UserBook> {
-    const userId = req.user?.id;
-    if (!userId) throw new Error("Non authentifié");
-
-    const repo = AppDataSource.getRepository(UserBook);
-    const userBook = await repo.findOne({
-      where: { user: { id: userId }, googleBookId },
-      relations: ["user"],
-    });
-
-    if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
-
-    userBook.rating = rating;
-    return await repo.save(userBook);
-  }
-
-  @Mutation(() => UserBook)
-  async reviewUserBook(@Arg("googleBookId") googleBookId: string, @Arg("review") review: string, @Ctx() { req }: MyContext): Promise<UserBook> {
-    const userId = req.user?.id;
-    if (!userId) throw new Error("Non authentifié");
-
-    const repo = AppDataSource.getRepository(UserBook);
-    const userBook = await repo.findOne({
-      where: { user: { id: userId }, googleBookId },
-      relations: ["user"],
-    });
-
-    if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
-
-    userBook.review = review;
-    return await repo.save(userBook);
   }
 
   @Query(() => [UserBookWithDetails])

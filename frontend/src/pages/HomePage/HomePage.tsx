@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import PendingFriendRequests from "../../components/PendingFriendRequests/PendingFriendRequests";
 import FriendList from "../../components/FriendList/FriendList";
 import "./HomePage.scss";
+import Feed from "../../components/Feed/Feed";
 
 const HomePage = () => {
   const { user } = useUser();
@@ -62,6 +63,9 @@ const HomePage = () => {
 
       <div className="homepage__right">
         <PendingFriendRequests user={user} />
+      </div>
+      <div className="homepage__feed">
+        <Feed />
       </div>
     </div>
   );

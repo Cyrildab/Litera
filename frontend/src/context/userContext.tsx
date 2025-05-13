@@ -1,4 +1,3 @@
-// src/context/UserContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY } from "../graphql/queries/me";

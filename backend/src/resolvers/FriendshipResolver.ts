@@ -204,4 +204,20 @@ export class FriendshipResolver {
     await repo.remove(friendship);
     return true;
   }
+
+  @Query(() => [Number])
+  async getFriendIds(@Ctx() { req }: MyContext): Promise<number[]> {
+    const userId = req.user?.id;
+    if (!userId) throw new Error("Non authentifié");
+
+    const friendships = await AppDataSource.getRepository(Friendship)
+      .createQueryBuilder("friendship")
+      .leftJoinAndSelect("friendship.requester", "requester")
+      .leftJoinAndSelect("friendship.receiver", "receiver")
+      .where("(friendship.requesterId = :userId OR friendship.receiverId = :userId)", { userId })
+      .andWhere("friendship.accepted = true")
+      .getMany();
+
+    return friendships.map((f) => (f.requester.id === userId ? f.receiver.id : f.requester.id));
+  }
 }
