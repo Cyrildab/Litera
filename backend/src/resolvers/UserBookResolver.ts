@@ -70,6 +70,17 @@ export class UserBookResolver {
     if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
 
     userBook.rating = rating;
+
+    if (!userBook.title || !userBook.author || !userBook.cover) {
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${googleBookId}`);
+      const json = await res.json();
+      const volume = json.volumeInfo;
+
+      userBook.title = volume?.title || null;
+      userBook.author = volume?.authors?.[0] || null;
+      userBook.cover = volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || null;
+    }
+
     const saved = await repo.save(userBook);
 
     await logActivity({
@@ -99,6 +110,17 @@ export class UserBookResolver {
     if (!userBook) throw new Error("Livre non trouvé pour cet utilisateur");
 
     userBook.review = review;
+
+    if (!userBook.title || !userBook.author || !userBook.cover) {
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${googleBookId}`);
+      const json = await res.json();
+      const volume = json.volumeInfo;
+
+      userBook.title = volume?.title || null;
+      userBook.author = volume?.authors?.[0] || null;
+      userBook.cover = volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || null;
+    }
+
     const saved = await repo.save(userBook);
 
     await logActivity({
