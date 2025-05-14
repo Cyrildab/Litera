@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import "./ProfilePage.scss";
 import MyBooks from "../../components/MyBooks/MyBooks";
+import FriendList from "../../components/FriendList/FriendList";
+import PendingFriendRequests from "../../components/PendingFriendRequests/PendingFriendRequests";
 
 type FormData = {
   username?: string;
@@ -21,6 +23,7 @@ const ProfilePage = () => {
   const [editingField, setEditingField] = useState<keyof FormData | null>(null);
   const [editingImage, setEditingImage] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [checkUsernameTaken] = useLazyQuery(IS_USERNAME_TAKEN);
   const { register, setValue, watch } = useForm<FormData>();
@@ -52,9 +55,7 @@ const ProfilePage = () => {
       if (field === "username" && value !== user.username) {
         const { data: usernameCheck } = await checkUsernameTaken({ variables: { username: value } });
         if (usernameCheck?.isUsernameTaken) {
-          toast.error("Ce nom d'utilisateur est déjà pris.", {
-            icon: <span>❌</span>,
-          });
+          toast.error("Ce nom d'utilisateur est déjà pris.", { icon: <span>❌</span> });
           return;
         }
       }
@@ -62,20 +63,13 @@ const ProfilePage = () => {
     }
 
     try {
-      await updateUser({
-        variables: { data },
-        refetchQueries: ["Me"],
-      });
+      await updateUser({ variables: { data }, refetchQueries: ["Me"] });
       setEditingField(null);
       setEditingImage(false);
       setPreviewImage(null);
     } catch (error) {
       console.error(error);
-      if ((error as any)?.message?.includes("duplicate key value") || (error as any)?.graphQLErrors?.[0]?.message?.includes("duplicate")) {
-        alert("Ce nom d'utilisateur est déjà utilisé.");
-      } else {
-        alert("Erreur lors de la mise à jour");
-      }
+      alert("Erreur lors de la mise à jour");
     }
   };
 
@@ -94,7 +88,6 @@ const ProfilePage = () => {
       <div className="profile">
         <div className="profile__card">
           <h1 className="profile__title">Mon profil</h1>
-
           <div className="profile__avatar-wrapper">
             {previewImage || user.image ? (
               <img src={previewImage || user.image} alt="avatar" className="profile__avatar" />
@@ -131,7 +124,7 @@ const ProfilePage = () => {
           </div>
 
           <form onSubmit={(e) => e.preventDefault()} className="profile__form">
-            {/* Nom d'utilisateur */}
+            {/* Username */}
             <div className="profile__field">
               <label>Nom d'utilisateur :</label>
               {editingField === "username" ? (
@@ -171,61 +164,81 @@ const ProfilePage = () => {
               )}
             </div>
 
-            {/* Date de naissance */}
-            <div className="profile__field">
-              <label>Date de naissance :</label>
-              {editingField === "birthday" ? (
-                <div className="profile__edit">
-                  <input type="date" {...register("birthday")} className="profile__input" />
-                  <button type="button" onClick={onSubmit} className="profile__save">
-                    💾
-                  </button>
-                </div>
-              ) : (
-                <div className="profile__display">
-                  <span>{user.birthday ? new Date(user.birthday).toLocaleDateString("fr-FR") : "--"}</span>
-                  <button type="button" onClick={() => startEdit("birthday", user.birthday)} className="profile__edit">
-                    ✏️
-                  </button>
-                </div>
-              )}
-            </div>
+            {/* Bouton pour afficher les options avancées */}
+            {!showAdvanced && (
+              <button type="button" onClick={() => setShowAdvanced(true)} className="profile__toggle">
+                Plus de modifications ▼
+              </button>
+            )}
 
-            {/* Genre */}
-            <div className="profile__field">
-              <label>Genre :</label>
-              {editingField === "gender" ? (
-                <div className="profile__edit">
-                  <select {...register("gender")} className="profile__input">
-                    <option value="">--</option>
-                    <option value="true">Homme</option>
-                    <option value="false">Femme</option>
-                  </select>
-                  <button type="button" onClick={onSubmit} className="profile__save">
-                    💾
-                  </button>
+            {/* Champs avancés */}
+            {showAdvanced && (
+              <div className="profile__advanced">
+                {/* Date de naissance */}
+                <div className="profile__field">
+                  <label>Date de naissance :</label>
+                  {editingField === "birthday" ? (
+                    <div className="profile__edit">
+                      <input type="date" {...register("birthday")} className="profile__input" />
+                      <button type="button" onClick={onSubmit} className="profile__save">
+                        💾
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="profile__display">
+                      <span>{user.birthday ? new Date(user.birthday).toLocaleDateString("fr-FR") : "--"}</span>
+                      <button type="button" onClick={() => startEdit("birthday", user.birthday)} className="profile__edit">
+                        ✏️
+                      </button>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="profile__display">
-                  <span>{user.gender === true ? "Homme" : user.gender === false ? "Femme" : "--"}</span>
-                  <button type="button" onClick={() => startEdit("gender", String(user.gender))} className="profile__edit">
-                    ✏️
-                  </button>
-                </div>
-              )}
-            </div>
 
-            {/* Email */}
-            <div className="profile__field">
-              <label>Email :</label>
-              <div className="profile__display">
-                <span>{user.email}</span>
+                {/* Genre */}
+                <div className="profile__field">
+                  <label>Genre :</label>
+                  {editingField === "gender" ? (
+                    <div className="profile__edit">
+                      <select {...register("gender")} className="profile__input">
+                        <option value="">--</option>
+                        <option value="true">Homme</option>
+                        <option value="false">Femme</option>
+                      </select>
+                      <button type="button" onClick={onSubmit} className="profile__save">
+                        💾
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="profile__display">
+                      <span>{user.gender === true ? "Homme" : user.gender === false ? "Femme" : "--"}</span>
+                      <button type="button" onClick={() => startEdit("gender", String(user.gender))} className="profile__edit">
+                        ✏️
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div className="profile__field">
+                  <label>Email :</label>
+                  <div className="profile__display">
+                    <span>{user.email}</span>
+                  </div>
+                </div>
+
+                {/* Bouton en bas du bloc */}
+                <button type="button" onClick={() => setShowAdvanced(false)} className="profile__toggle">
+                  Masquer les options avancées ▲
+                </button>
               </div>
-            </div>
+            )}
           </form>
         </div>
       </div>
+
       <MyBooks />
+      <FriendList />
+      <PendingFriendRequests user={user} />
     </>
   );
 };

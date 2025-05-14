@@ -209,4 +209,14 @@ export class UserBookResolver {
       })
     );
   }
+
+  @Mutation(() => Boolean)
+  async deleteUserBook(@Arg("googleBookId") googleBookId: string, @Ctx() { req }: MyContext): Promise<boolean> {
+    const userId = req.user?.id;
+    if (!userId) throw new Error("Non authentifié");
+
+    const repo = AppDataSource.getRepository(UserBook);
+    const result = await repo.delete({ googleBookId, user: { id: userId } });
+    return !!result.affected;
+  }
 }

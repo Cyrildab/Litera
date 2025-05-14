@@ -61,6 +61,20 @@ const BookDetail = () => {
   }, [id, refetchReviews, refetchUserBooks]);
 
   useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith("#review-")) {
+      // attendre un peu que tous les éléments soient bien montés
+      const timeout = setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 300); // 300ms pour laisser le temps au DOM d'afficher les reviews
+      return () => clearTimeout(timeout);
+    }
+  }, [reviewsData]);
+
+  useEffect(() => {
     if (book && userBook) {
       setSelectedStatus(userBook.status);
       setSelectedRating(userBook.rating ?? null);
@@ -216,7 +230,7 @@ const BookDetail = () => {
           <div className="bookdetail__allreviews">
             <h4>Critiques des autres lecteurs :</h4>
             {otherUsersReviews.map((reviewBook: any) => (
-              <div key={reviewBook.id} className="bookdetail__reviewcard">
+              <div key={reviewBook.id} className="bookdetail__reviewcard" id={`review-${reviewBook.user.id}`}>
                 <div className="bookdetail__user" onClick={() => navigate(`/users/${reviewBook.user.id}`)} style={{ cursor: "pointer" }}>
                   {reviewBook.user.image ? (
                     <img src={reviewBook.user.image} alt="avatar" className="bookdetail__avatar" />
