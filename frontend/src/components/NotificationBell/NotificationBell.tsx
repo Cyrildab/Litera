@@ -107,7 +107,7 @@ const NotificationBell = () => {
       </button>
 
       {dropdownOpen && (
-        <div className="notification-dropdown">
+        <div className={`notification-dropdown ${window.innerWidth <= 768 ? "notification-modal" : ""}`}>
           <h4>Activités de tes amis</h4>
           {activities.length === 0 ? (
             <p>Aucune activité récente.</p>
