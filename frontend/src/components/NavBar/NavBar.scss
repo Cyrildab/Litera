@@ -4,3 +4,15 @@
 @import "./_navbar-buttons";
 @import "./_navbar-profile";
 @import "./_navbar-logout";
+
+.navbar__logo {
+  font-size: 0rem;
+}
+
+.navbar__logo img {
+  height: 7rem;
+
+  @media (max-width: 768px) {
+    height: 3rem;
+  }
+}

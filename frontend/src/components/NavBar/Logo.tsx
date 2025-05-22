@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Logo = () => (
   <Link to="/" className="navbar__logo">
-    LITERA
+    <img src="/logo.png" alt="Logo LitEra" />
   </Link>
 );
 
