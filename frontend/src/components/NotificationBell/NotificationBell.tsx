@@ -65,16 +65,13 @@ const NotificationBell = () => {
     const username = activity.user.username;
     const title = activity.title || "un livre";
 
-    switch (activity.type) {
-      case "STATUS":
-        return `${username} a changé le statut de "${title}" en "${getStatusLabel(activity.status)}"`;
-      case "RATING":
-        return `${username} a noté "${title}" : ${activity.rating} ★`;
-      case "REVIEW":
-        return `${username} a commenté "${title}"`;
-      default:
-        return `${username} a interagi avec "${title}"`;
-    }
+    const actions = [];
+    if (activity.status) actions.push(`a changé le statut en "${getStatusLabel(activity.status)}"`);
+    if (typeof activity.rating === "number") actions.push(`a noté : ${activity.rating} ★`);
+    if (activity.review) actions.push("a commenté");
+
+    const actionText = actions.join(", ");
+    return `${username} ${actionText} "${title}"`;
   };
 
   const getStatusLabel = (status: string) => {

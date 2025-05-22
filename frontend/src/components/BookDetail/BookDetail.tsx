@@ -63,13 +63,12 @@ const BookDetail = () => {
   useEffect(() => {
     const hash = window.location.hash;
     if (hash && hash.startsWith("#review-")) {
-      // attendre un peu que tous les éléments soient bien montés
       const timeout = setTimeout(() => {
         const el = document.querySelector(hash);
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-      }, 300); // 300ms pour laisser le temps au DOM d'afficher les reviews
+      }, 300);
       return () => clearTimeout(timeout);
     }
   }, [reviewsData]);

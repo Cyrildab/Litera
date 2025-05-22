@@ -132,24 +132,26 @@ const Feed = () => {
                     <Link to={`/users/${activity.user.id}`} className="feedpage__userlink">
                       <strong>{activity.user.username}</strong>
                     </Link>{" "}
-                    {activity.type === "STATUS" && (
-                      <>
-                        a changé le statut de <Link to={`/books/${activity.googleBookId}`}>{activity.title || "un livre"}</Link> en
-                        <em> {getStatusLabel(activity.status)}</em>
-                      </>
-                    )}
-                    {activity.type === "RATING" && (
-                      <>
-                        a noté <Link to={`/books/${activity.googleBookId}`}>{activity.title || "un livre"}</Link> :
-                        <span className="feedpage__rating"> {activity.rating} ★</span>
-                      </>
-                    )}
-                    {activity.type === "REVIEW" && (
-                      <>
-                        a commenté{" "}
-                        <Link to={{ pathname: `/books/${activity.googleBookId}`, hash: `#review-${activity.user.id}` }}>{activity.title || "un livre"}</Link>
-                      </>
-                    )}
+                    <>
+                      {activity.status && (
+                        <>
+                          a changé le statut de <Link to={`/books/${activity.googleBookId}`}>{activity.title || "un livre"}</Link> en{" "}
+                          <em>{getStatusLabel(activity.status)}</em>
+                        </>
+                      )}
+                      {typeof activity.rating === "number" && (
+                        <>
+                          {activity.status && ", "}a noté <Link to={`/books/${activity.googleBookId}`}>{activity.title || "un livre"}</Link> :
+                          <span className="feedpage__rating"> {activity.rating} ★</span>
+                        </>
+                      )}
+                      {activity.review && (
+                        <>
+                          {(activity.status || typeof activity.rating === "number") && ", "}a commenté{" "}
+                          <Link to={{ pathname: `/books/${activity.googleBookId}`, hash: `#review-${activity.user.id}` }}>{activity.title || "un livre"}</Link>
+                        </>
+                      )}
+                    </>
                   </p>
                   <span className="feedpage__date">
                     {new Date(activity.createdAt).toLocaleString("fr-FR", {
