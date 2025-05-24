@@ -33,12 +33,15 @@ export class UserBook extends BaseEntity {
   user!: User;
 
   @Field({ nullable: true })
+  @Column({ type: "text", nullable: true })
   title?: string;
 
   @Field({ nullable: true })
+  @Column({ type: "text", nullable: true })
   author?: string;
 
   @Field({ nullable: true })
+  @Column({ type: "text", nullable: true })
   cover?: string;
 
   @Field({ nullable: true })

@@ -6,6 +6,7 @@ import AppDataSource from "../data-source";
 import { UserBookWithDetails } from "../types/UserBookWithDetails";
 import { logActivity } from "../utils/logActivity";
 import { ActivityType } from "../entities/Activity";
+import { IsNull } from "typeorm";
 
 @Resolver()
 export class UserBookResolver {
@@ -141,25 +142,10 @@ export class UserBookResolver {
     const userId = req.user?.id;
     if (!userId) throw new Error("Non authentifié");
 
-    const userBooks = await AppDataSource.getRepository(UserBook).find({
+    return await AppDataSource.getRepository(UserBook).find({
       where: { user: { id: userId } },
       relations: ["user"],
     });
-
-    return await Promise.all(
-      userBooks.map(async (userBook) => {
-        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${userBook.googleBookId}`);
-        const json = await res.json();
-        const volume = json.volumeInfo;
-
-        return {
-          ...userBook,
-          title: volume?.title || "Titre inconnu",
-          author: volume?.authors?.[0] || "Auteur inconnu",
-          cover: volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || "",
-        };
-      })
-    );
   }
 
   @Query(() => [UserBookWithDetails])
@@ -218,5 +204,35 @@ export class UserBookResolver {
     const repo = AppDataSource.getRepository(UserBook);
     const result = await repo.delete({ googleBookId, user: { id: userId } });
     return !!result.affected;
+  }
+
+  @Mutation(() => Int)
+  async repairUserBooks(): Promise<number> {
+    const repo = AppDataSource.getRepository(UserBook);
+    const brokenBooks = await repo.find({
+      where: [{ title: IsNull() }, { author: IsNull() }, { cover: IsNull() }],
+      relations: ["user"],
+    });
+
+    let fixed = 0;
+
+    for (const book of brokenBooks) {
+      try {
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${book.googleBookId}`);
+        const json = await res.json();
+        const volume = json.volumeInfo;
+
+        book.title = volume?.title || "Titre inconnu";
+        book.author = volume?.authors?.[0] || "Auteur inconnu";
+        book.cover = volume?.imageLinks?.thumbnail?.replace("zoom=1", "zoom=3") || "";
+
+        await repo.save(book);
+        fixed++;
+      } catch (e) {
+        console.error(`Erreur lors de la mise à jour du livre ${book.googleBookId}`, e);
+      }
+    }
+
+    return fixed;
   }
 }

@@ -80,8 +80,18 @@ const BookDetail = () => {
     }
   }, [book, userBook]);
 
-  if (loading) return <p>Chargement...</p>;
-  if (error || !book) return <p>Erreur : Livre introuvable.</p>;
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowError(true);
+    }, 800); // attend 800 ms avant d'afficher l'erreur
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) return <p>Chargement du livre...</p>;
+  if ((error || !book) && showError) return <p>Erreur : Livre introuvable.</p>;
 
   const handleAdd = async (status: ReadingStatus) => {
     try {
